@@ -1,0 +1,24 @@
+using Project.Model.Interactive;
+using Project.Properties;
+using UnityEngine;
+
+namespace Assets.Scripts.Core.Editor.Code.Templates
+{
+  public static class %NAME%PropertyBuilder
+  {
+    public static InteractiveVo %NAME%(this InteractiveVo vo, PropertyType type = PropertyType.None)
+    {
+      %NAME%Property propertyData = new %NAME%Property();
+      //propertyData.key = key;
+
+      vo.Add(new PropertyVo
+      {
+        cn = PropertyKeys.%NAME%Property,
+        ownerKey = vo.Key,
+        type = type == PropertyType.None ? PropertyKeys.GetType(PropertyKeys.%NAME%Property) : type,
+        data = JsonConvert.SerializeObject(propertyData)
+      });
+      return vo;
+    }
+  }
+}

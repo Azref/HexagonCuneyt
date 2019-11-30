@@ -1,0 +1,12 @@
+﻿using strange.extensions.mediation.impl;
+using Assets.Scripts.Core.Manager.Screen;
+
+namespace %TemplateNS%
+{
+    public class %Template%View : EventView, IPanelView
+    {
+	    public IPanelVo vo { get; set; }
+
+        %ListenerFunction%
+    }
+}

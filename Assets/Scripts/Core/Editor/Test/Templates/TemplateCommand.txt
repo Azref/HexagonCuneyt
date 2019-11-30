@@ -1,0 +1,22 @@
+﻿#if UNITY_EDITOR || DEBUG
+using Assets.Scripts.Core.Manager.Screen;
+using Assets.Scripts.Core.Enums;
+using strange.extensions.command.impl;
+
+namespace %TemplateNS%
+{
+    public class %Template%Command : EventCommand
+    {
+        public override void Execute()
+        {
+            //dispatcher.Dispatch(ScreenEvent.OpenPanel, new PanelVo{Name = "LoadingScreen"});
+
+            dispatcher.Dispatch(ScreenEvent.OpenPanel, new PanelVo
+			{
+			     Name = AppScreens.%Name%,
+				 Type = AppStatus.%Name%
+			} );
+        }
+    }
+}
+#endif

@@ -1,0 +1,31 @@
+﻿#if UNITY_EDITOR || DEBUG
+using Assets.Tests.Base;
+using Assets.Scripts.Project.View.%Name%;
+using Assets.Tests.Screen.%Name%.Scripts.Controller;
+using strange.extensions.context.api;
+using UnityEngine;
+
+namespace %TemplateNS%
+{
+    public class %Template%Context : BaseTestContext
+    {
+        public %Template%Context(MonoBehaviour view) : base(view)
+        {
+        }
+
+        public %Template%Context(MonoBehaviour view, ContextStartupFlags flags) : base(view, flags)
+        {
+        }
+
+        protected override void mapBindings()
+        {
+            base.mapBindings();
+
+            mediationBinder.Bind<%Name%%Type%View>().To<%Name%%Type%Mediator>();
+
+
+            commandBinder.Bind(ContextEvent.START).InSequence().To<%Template%Command>();
+        }
+    }
+}
+#endif

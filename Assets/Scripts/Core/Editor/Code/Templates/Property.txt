@@ -1,0 +1,9 @@
+using System;
+
+namespace Assets.Scripts.Core.Editor.Code.Templates
+{
+  [Serializable]
+  public class %NAME%Property
+  {
+  }
+}

@@ -1,0 +1,32 @@
+using strange.extensions.context.api;
+using strange.extensions.context.impl;
+using UnityEngine;
+//%IMPORTPOINT%
+
+namespace Assets.Scripts.Core.Editor.Code.Templates
+{
+    public class %NAME%Context : MVCSContext
+    {
+        public %NAME%Context(MonoBehaviour view) : base(view)
+        {
+        }
+
+        public %NAME%Context(MonoBehaviour view, ContextStartupFlags flags) : base(view, flags)
+        {
+        }
+
+        protected override void mapBindings()
+        {
+            base.mapBindings();
+
+            // models & services
+            //%INJECTIONPOINT%
+
+            // views
+            //%MEDIATIONPOINT%
+
+            // commands
+            //%COMMANDPOINT%
+        }
+    }
+}

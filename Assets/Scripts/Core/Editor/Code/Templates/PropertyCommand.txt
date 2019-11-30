@@ -1,0 +1,22 @@
+using Newtonsoft.Json;
+using Project.Model.Interactive;
+using Project.Properties;
+using strange.extensions.command.impl;
+
+namespace Assets.Scripts.Core.Editor.Code.Templates
+{
+  public class %NAME%PropertyCommand : EventCommand
+  {
+    [Inject]
+    public IInteractiveModel interactiveModel { get; set; }
+
+    public override void Execute()
+    {
+      PropertyVo vo = (PropertyVo) evt.data;
+      %NAME%Property property = JsonConvert.DeserializeObject<%NAME%Property>(vo.data);
+      InteractiveVo interactiveVo = interactiveModel.GetByKey(vo.ownerKey);
+
+
+    }
+  }
+}

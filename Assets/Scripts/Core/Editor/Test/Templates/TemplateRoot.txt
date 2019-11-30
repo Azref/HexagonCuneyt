@@ -1,0 +1,31 @@
+﻿#if UNITY_EDITOR || DEBUG
+using Assets.Scripts.Core.Manager.Screen;
+using strange.extensions.context.impl;
+using UnityEngine;
+
+namespace %TemplateNS%
+{
+    public class %Template%Root : ContextView
+    {
+        private void Awake()
+        {
+            Debug.Log("%Template%Root");
+
+			 var sm = GetComponentInChildren<ScreenManager>();
+            if (sm != null)
+            {
+                for (var i = 0; i < sm.Layers.Length; i++)
+                {
+                    while (sm.Layers[i].childCount > 0)
+                    {
+                        DestroyImmediate(sm.Layers[i].GetChild(0).gameObject);
+                    }
+                }
+            }
+
+            //Instantiate the context, passing it this instance.
+            context = new %Template%Context(this);
+        }
+    }
+}
+#endif
