@@ -9,7 +9,8 @@ using strange.extensions.mediation.impl;
 using Assets.Scripts.Core.Manager.Screen;
 using Assets.Scripts.Core.Model.Bundle;
 using Assets.Scripts.Core.Manager.Pool;
-using Assets.Scripts.Core.Model.App;
+using Assets.Scripts.Core.Model.Game;
+using Assets.Scripts.Project.Event;
 
 namespace Assets.Tests.Base
 {
@@ -34,12 +35,13 @@ namespace Assets.Tests.Base
             // crosss context
             CrossContextEvent<ContextEvent>();
             CrossContextEvent<ScreenEvent>();
+            CrossContextEvent<GameEvent>();
 
             // base models
             injectionBinder.Bind<IScreenModel>().To<ScreenModel>().ToSingleton().CrossContext();
             injectionBinder.Bind<IBundleModel>().To<BundleModel>().ToSingleton().CrossContext();
             injectionBinder.Bind<IObjectPoolModel>().To<ObjectPoolModel>().ToSingleton();
-            injectionBinder.Bind<IAppModel>().To<AppModel>().ToSingleton().CrossContext();
+            injectionBinder.Bind<IGameModel>().To<GameModel>().ToSingleton().CrossContext();
 
             // services
             //injectionBinder.Bind<ILocalizationService>().To<I2LocalizationService>().ToSingleton().CrossContext();

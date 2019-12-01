@@ -14,7 +14,7 @@ namespace Assets.Scripts.Core.Manager.Screen
         /// <summary>
         /// Type of the panel
         /// </summary>
-        AppStatus Type { get; set; }
+        GameStatus Type { get; set; }
 
         /// <summary>
         /// Index of layer to instantiate

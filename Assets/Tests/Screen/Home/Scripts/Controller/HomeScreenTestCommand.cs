@@ -14,8 +14,8 @@ namespace Assets.Tests.Screen.Home.Scripts.Controller
         {
             dispatcher.Dispatch(ScreenEvent.OpenPanel, new PanelVo
             {
-                Name = AppScreens.Home,
-                Type = AppStatus.Home
+                Name = GameScreens.Home,
+                Type = GameStatus.Home
             });
         }
     }

@@ -7,7 +7,7 @@ using System;
 namespace Assets.Scripts.Core.Enums
 {
     [Flags]
-    public enum AppStatus
+    public enum GameStatus
     {
         Blocked = 1 << 0,
         Confirm = 1,
@@ -18,7 +18,7 @@ namespace Assets.Scripts.Core.Enums
         Page3 = 1 << 5,
         //Pages = Page1 | Page2 | Page3,
 
-        /*EDITOR-BREAKPOINT*/
+		/*EDITOR-BREAKPOINT*/ 
 
         All = ~(-1 << 6/*EDITOR-NUMPOINT*/)
     }

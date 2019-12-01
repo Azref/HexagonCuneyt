@@ -97,6 +97,7 @@ namespace Assets.Scripts.Core.Manager.Pool
 
             newObj = _objectQueues[key].Dequeue();
             newObj.SetActive(true);
+
             newObj.GetComponent<IPoolable>().OnGetFromPool();
             return newObj;
         }

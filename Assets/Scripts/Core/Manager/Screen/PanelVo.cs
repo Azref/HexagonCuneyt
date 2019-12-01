@@ -26,6 +26,6 @@ namespace Assets.Scripts.Core.Manager.Screen
 
         public PanelCallback OnCancel { get; set; }
 
-        public AppStatus Type { get; set; }
+        public GameStatus Type { get; set; }
     }
 }

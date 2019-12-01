@@ -7,7 +7,7 @@ using strange.extensions.mediation.impl;
 using UnityEngine;
 using Assets.Scripts.Core.View.Confirm;
 using Assets.Scripts.Core.Model.Bundle;
-using Assets.Scripts.Core.Model.App;
+using Assets.Scripts.Core.Model.Game;
 using Assets.Scripts.Core.Enums;
 
 #if UNITY_EDITOR //|| DEBUG
@@ -30,7 +30,7 @@ namespace Assets.Scripts.Core.Manager.Screen
 
         [Inject] public IBundleModel bundleModel { get; set; }
 
-        [Inject] public IAppModel App { get; set; }
+        [Inject] public IGameModel Game { get; set; }
 
         private List<GameObject> _panels;
 
@@ -44,7 +44,7 @@ namespace Assets.Scripts.Core.Manager.Screen
         /// </summary>
         public override void OnRegister()
         {
-            App.Status.value = 0;
+            Game.Status.value = 0;
             view.dispatcher.AddListener(ScreenManagerEvent.OpenLogPanel, OnOpenPanel);
 
             dispatcher.AddListener(ScreenEvent.OpenPanel, OnOpenPanel);
@@ -97,7 +97,7 @@ namespace Assets.Scripts.Core.Manager.Screen
                 Description = message,
                 ButtonLabel = "Ok",
                 LayerIndex = 2,
-                Type = AppStatus.Confirm
+                Type = GameStatus.Confirm
             };
 
             OpenPanelInner(panelVo);
@@ -264,7 +264,7 @@ namespace Assets.Scripts.Core.Manager.Screen
             if (!screenModel.IgnoreHistory.Contains(vo.Name))
                 screenModel.History.Add(vo);
 
-            App.Status.value |= vo.Type;
+            Game.Status.value |= vo.Type;
             //Debug.Log("---------------------" + vo.Type);
 
             GameObject newPanel = Instantiate(template);
@@ -287,7 +287,7 @@ namespace Assets.Scripts.Core.Manager.Screen
         {
             foreach (Transform child in view.Layers[vo.LayerIndex].transform)
             {
-                App.Status.value &= ~child.GetComponent<IPanelView>().vo.Type;
+                Game.Status.value &= ~child.GetComponent<IPanelView>().vo.Type;
                 //if (App.Status.value.HasFlag(child.GetComponent<IPanelView>().vo.Type))
                 //    App.Status.value -= child.GetComponent<IPanelView>().vo.Type;
 
@@ -316,7 +316,7 @@ namespace Assets.Scripts.Core.Manager.Screen
         {
             foreach (Transform panel in view.Layers[voLayerIndex].transform)
             {
-                App.Status.value &= ~panel.GetComponent<IPanelView>().vo.Type;
+                Game.Status.value &= ~panel.GetComponent<IPanelView>().vo.Type;
                 //if (App.Status.value.HasFlag(panel.GetComponent<IPanelView>().vo.Type))
                 //    App.Status.value -= panel.GetComponent<IPanelView>().vo.Type;
 
@@ -330,7 +330,7 @@ namespace Assets.Scripts.Core.Manager.Screen
         /// </summary>
         private void OnBlock(IEvent payload)
         {
-            App.Status.value |= AppStatus.Blocked;
+            Game.Status.value |= GameStatus.Blocked;
             view.Block();
         }
 
@@ -341,7 +341,7 @@ namespace Assets.Scripts.Core.Manager.Screen
         {
             view.UnBlock();
             
-            App.Status.value &= ~AppStatus.Blocked;
+            Game.Status.value &= ~GameStatus.Blocked;
             //if (App.Status.value.HasFlag(Project.Enums.AppStatus.Blocked))
             //    App.Status.value -= Project.Enums.AppStatus.Blocked;
         }
@@ -387,7 +387,7 @@ namespace Assets.Scripts.Core.Manager.Screen
         {
             foreach (var panel in _panels)
             {
-                App.Status.value &= ~panel.GetComponent<IPanelView>().vo.Type;
+                Game.Status.value &= ~panel.GetComponent<IPanelView>().vo.Type;
                 //if (App.Status.value.HasFlag(panel.GetComponent<IPanelView>().vo.Type))
                 //    App.Status.value -= panel.GetComponent<IPanelView>().vo.Type;
 

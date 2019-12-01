@@ -73,6 +73,6 @@ namespace Assets.Scripts.Core.View.Confirm
         /// <summary>
         /// Type on AppStatus. Should be Confirm=1
         /// </summary>
-        public AppStatus Type { get; set; }
+        public GameStatus Type { get; set; }
     }
 }

@@ -9,22 +9,25 @@ using Assets.Scripts.Core.Model.Bundle;
 using Assets.Scripts.Core.Manager.Screen;
 using Assets.Scripts.Core.Manager.Pool;
 using Assets.Scripts.Project.View.Home;
-using Assets.Scripts.Core.Model.App;
-using Assets.Tests.Screen.Home.Scripts.Controller;
+using Assets.Scripts.Core.Model.Game;
+using Assets.Screen.Home.Scripts.Controller;
+using Assets.Scripts.Project.Event;
+using Assets.Scripts.Project.Manager.Hexagon;
+using Assets.Scripts.Project.Manager.Cam;
 
 namespace Assets.Scripts.Project.Context
 {
     /// <summary>
     /// Main application flow should be controlled over this class. 
     /// </summary>
-    public class AppContext : MVCSContext
+    public class GameContext : MVCSContext
     {
 
-        public AppContext(MonoBehaviour view) : base(view)
+        public GameContext(MonoBehaviour view) : base(view)
         {
         }
 
-        public AppContext(MonoBehaviour view, ContextStartupFlags flags) : base(view, flags)
+        public GameContext(MonoBehaviour view, ContextStartupFlags flags) : base(view, flags)
         {
         }
 
@@ -35,11 +38,12 @@ namespace Assets.Scripts.Project.Context
             //context
             CrossContextEvent<ContextEvent>();
             CrossContextEvent<ScreenEvent>();
+            CrossContextEvent<GameEvent>();
 
             //base models
             injectionBinder.Bind<IScreenModel>().To<ScreenModel>().ToSingleton().CrossContext();
             injectionBinder.Bind<IBundleModel>().To<BundleModel>().ToSingleton().CrossContext();
-            injectionBinder.Bind<IAppModel>().To<AppModel>().ToSingleton().CrossContext();
+            injectionBinder.Bind<IGameModel>().To<GameModel>().ToSingleton().CrossContext();
             injectionBinder.Bind<IObjectPoolModel>().To<ObjectPoolModel>().ToSingleton();
 
             //services
@@ -48,9 +52,12 @@ namespace Assets.Scripts.Project.Context
             //views
             mediationBinder.Bind<ScreenManager>().To<ScreenManagerMediator>();
             mediationBinder.Bind<HomeScreenView>().To<HomeScreenMediator>();
+            mediationBinder.Bind<HexManager>().To<HexManagerMediator>();
+            mediationBinder.Bind<HexView>().To<HexMediator>();
+            mediationBinder.Bind<CamManager>().To<CamManagerMediator>();
 
             // It is the start point of application. It works after all bindings are done
-            commandBinder.Bind(ContextEvent.START).InSequence().To<HomeScreenCommand>();
+            commandBinder.Bind(ContextEvent.START).To<HomeScreenCommand>().Once();
 
             //Any event that fire across the Context boundary get mapped here.
             //crossContextBridge.Bind(MainEvent.GAME_COMPLETE);
@@ -62,8 +69,6 @@ namespace Assets.Scripts.Project.Context
             //commandBinder.Bind(MainEvent.GAME_COMPLETE).To<GameCompleteCommand>();
 
             //commandBinder.Bind(ContextEvent.START).InSequence()
-            ////.To<AddServiceProcessorsCommand>()
-            ////.To<LoadBundleInfoCommand>()
             ////.To<LoadBundlesCommand>()
             ////.To<LoadDefaultsCommand>()
             //.To<StartCommand>();

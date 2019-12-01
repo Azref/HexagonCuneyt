@@ -4,10 +4,9 @@
 ////////// </summary>
 namespace Assets.Scripts.Core.Enums
 {
-    public class AppScreens
+    public class GameScreens
     {
         public const string Home = "Home";
-
-        /*EDITOR-BREAKPOINT*/
+		/*EDITOR-BREAKPOINT*/
     }
 }
