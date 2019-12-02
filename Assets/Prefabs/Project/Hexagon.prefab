@@ -93,7 +93,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7c86ba6fce562c459174ff072b68bdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridInfo: {fileID: 11400000, guid: 1918b669e5bd6244ab9cf068867ee6b1, type: 2}
   HexInfo: {fileID: 11400000, guid: 3ec0546d211f36c47bc7199561c7bbdd, type: 2}
   color: 0
   x: 0
   y: 0
+  TopHex: {fileID: 0}
+  BotHex: {fileID: 0}
+  LTHex: {fileID: 0}
+  LBHex: {fileID: 0}
+  RTHex: {fileID: 0}
+  RBHex: {fileID: 0}

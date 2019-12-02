@@ -2,12 +2,15 @@
 using Assets.Scripts.Core.View;
 using Assets.Scripts.Project.Enums;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Project.Manager.Hexagon
 {
     public class HexView : PoolView, IPoolable
     {
+        public RV_Grid GridInfo;
+
         public RV_Hexagon HexInfo;
 
         public HexagonColor color;
@@ -16,7 +19,7 @@ namespace Assets.Scripts.Project.Manager.Hexagon
 
         public int y;
 
-        public HexView TopHex, BotHex, LftHex, RgtHex;
+        public HexView TopHex, BotHex, LTHex, LBHex, RTHex, RBHex;
 
         /// ██████████████████████████████████████████████████████████████████████████
         /// <summary>████████████████████████ Setup ████████████████████████</summary>
@@ -40,6 +43,33 @@ namespace Assets.Scripts.Project.Manager.Hexagon
 
             GetComponent<SpriteRenderer>().color = HexInfo.Colors[color];
 
+            fixNeighbors();
+        }
+
+        private void fixNeighbors()
+        {
+            if (x % 2 == 0)
+            {
+                LTHex = CheckAndAssign(GridInfo.HexDict, (x - 1) + "-" + y);
+                LBHex = CheckAndAssign(GridInfo.HexDict, (x - 1) + "-" + (y - 1));
+                RTHex = CheckAndAssign(GridInfo.HexDict, (x + 1) + "-" + y);
+                RBHex = CheckAndAssign(GridInfo.HexDict, (x + 1) + "-" + (y - 1));
+            }
+            else
+            {
+                LTHex = CheckAndAssign(GridInfo.HexDict, (x - 1) + "-" + (y + 1));
+                LBHex = CheckAndAssign(GridInfo.HexDict, (x - 1) + "-" + y);
+                RTHex = CheckAndAssign(GridInfo.HexDict, (x + 1) + "-" + (y + 1));
+                RBHex = CheckAndAssign(GridInfo.HexDict, (x + 1) + "-" + y);
+            }
+        }
+
+        private HexView CheckAndAssign(Dictionary<string, HexView> Dictionary, string val)
+        {
+            if (Dictionary.ContainsKey(val))
+                return Dictionary[val];
+            else
+                return null;
         }
 
         /// ██████████████████████████████████████████████████████████████████████████

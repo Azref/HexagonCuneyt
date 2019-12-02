@@ -55,7 +55,7 @@ namespace Assets.Scripts.Project.Manager.Cam
 
             //float newZoom = _zoomSize;// Mathf.Lerp(5, 20, _zoomSize);
 
-            _cam.orthographicSize = _zoomSize+1;
+            _cam.orthographicSize = _zoomSize + 1;
 
             //_cam.orthographicSize = Mathf.Clamp(Mathf.Lerp(_cam.orthographicSize, orthographicSize, Time.deltaTime * 20f), 8f, Mathf.Infinity);
         }
