@@ -4,7 +4,7 @@ using strange.extensions.dispatcher.eventdispatcher.api;
 using strange.extensions.mediation.impl;
 using UnityEngine;
 
-namespace Assets.Scripts.Project.Manager.Hexagon
+namespace Assets.Scripts.Project.View.Hexagon
 {
     public enum HexagonEvent
     {

@@ -12,8 +12,9 @@ using Assets.Scripts.Project.View.Home;
 using Assets.Scripts.Core.Model.Game;
 using Assets.Screen.Home.Scripts.Controller;
 using Assets.Scripts.Project.Event;
-using Assets.Scripts.Project.Manager.Hexagon;
-using Assets.Scripts.Project.Manager.Cam;
+using Assets.Scripts.Project.View.Hexagon;
+using Assets.Scripts.Project.View.Cam;
+using Assets.Scripts.Project.Manager.Game;
 
 namespace Assets.Scripts.Project.Context
 {
@@ -52,7 +53,7 @@ namespace Assets.Scripts.Project.Context
             //views
             mediationBinder.Bind<ScreenManager>().To<ScreenManagerMediator>();
             mediationBinder.Bind<HomeScreenView>().To<HomeScreenMediator>();
-            mediationBinder.Bind<HexManager>().To<HexManagerMediator>();
+            mediationBinder.Bind<GameManager>().To<GameManagerMediator>();
             mediationBinder.Bind<HexView>().To<HexMediator>();
             mediationBinder.Bind<CamManager>().To<CamManagerMediator>();
 

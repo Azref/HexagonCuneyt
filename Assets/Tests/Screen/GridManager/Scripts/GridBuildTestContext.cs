@@ -1,6 +1,7 @@
 #if UNITY_EDITOR || DEBUG
-using Assets.Scripts.Project.Manager.Cam;
-using Assets.Scripts.Project.Manager.Hexagon;
+using Assets.Scripts.Project.Manager.Game;
+using Assets.Scripts.Project.View.Cam;
+using Assets.Scripts.Project.View.Hexagon;
 using Assets.Tests.Base;
 using Assets.Tests.Screen.GridManager.Scripts.Controller;
 using strange.extensions.context.api;
@@ -22,7 +23,7 @@ namespace Assets.Tests.Screen.GridManager.Scripts
         {
             base.mapBindings();
 
-            mediationBinder.Bind<HexManager>().To<HexManagerMediator>();
+            mediationBinder.Bind<GameManager>().To<GameManagerMediator>();
             mediationBinder.Bind<HexView>().To<HexMediator>();
             mediationBinder.Bind<CamManager>().To<CamManagerMediator>();
 

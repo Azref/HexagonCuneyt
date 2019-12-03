@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.Project.Manager.Hexagon;
+﻿using Assets.Scripts.Project.View.Hexagon;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;

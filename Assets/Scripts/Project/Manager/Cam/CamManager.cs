@@ -3,7 +3,7 @@ using strange.extensions.mediation.impl;
 using System;
 using UnityEngine;
 
-namespace Assets.Scripts.Project.Manager.Cam
+namespace Assets.Scripts.Project.View.Cam
 {
     public class CamManager : EventView
     {

@@ -1,5 +1,5 @@
 ﻿using Assets.Scripts.Project.Enums;
-using Assets.Scripts.Project.Manager.Hexagon;
+using Assets.Scripts.Project.View.Hexagon;
 using System;
 using System.Collections.Generic;
 

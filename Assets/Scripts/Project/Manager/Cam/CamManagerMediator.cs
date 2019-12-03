@@ -5,7 +5,7 @@ using strange.extensions.dispatcher.eventdispatcher.api;
 using strange.extensions.mediation.impl;
 using UnityEngine;
 
-namespace Assets.Scripts.Project.Manager.Cam
+namespace Assets.Scripts.Project.View.Cam
 {
     public enum CamManagerEvent
     {

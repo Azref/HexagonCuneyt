@@ -1,4 +1,3 @@
-using System;
 using Assets.Scripts.Core.Manager.Pool;
 using Assets.Scripts.Core.Model.Game;
 using Assets.Scripts.Project.Enums;
@@ -6,16 +5,16 @@ using Assets.Scripts.Project.Event;
 using strange.extensions.dispatcher.eventdispatcher.api;
 using strange.extensions.mediation.impl;
 
-namespace Assets.Scripts.Project.Manager.Hexagon
+namespace Assets.Scripts.Project.Manager.Game
 {
     public enum HexManagerEvent
     {
         GridReady
     }
 
-    public class HexManagerMediator : EventMediator
+    public class GameManagerMediator : EventMediator
     {
-        [Inject] public HexManager view { get; set; }
+        [Inject] public GameManager view { get; set; }
 
         [Inject] public IObjectPoolModel poolModel { get; set; }
 
@@ -47,8 +46,8 @@ namespace Assets.Scripts.Project.Manager.Hexagon
         public override void OnRemove()
         {
 			view.dispatcher.RemoveListener(HexManagerEvent.GridReady,OnGridReady);
-            dispatcher.RemoveListener(GameEvent.BuildGrid, OnBuildGrid);
 
+            dispatcher.RemoveListener(GameEvent.BuildGrid, OnBuildGrid);
         }
     }
 }

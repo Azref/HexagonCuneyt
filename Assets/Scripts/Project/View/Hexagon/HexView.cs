@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Scripts.Project.Manager.Hexagon
+namespace Assets.Scripts.Project.View.Hexagon
 {
     public class HexView : PoolView, IPoolable
     {
@@ -25,9 +25,9 @@ namespace Assets.Scripts.Project.Manager.Hexagon
         [DictionaryDrawerSettings(DisplayMode = DictionaryDisplayOptions.Foldout)]
         public Dictionary<HexNeighbor, HexView> Neighbors = new Dictionary<HexNeighbor, HexView>();
 
-        /// ██████████████████████████████████████████████████████████████████████████
-        /// <summary>████████████████████████ Setup ████████████████████████</summary>
-        /// ██████████████████████████████████████████████████████████████████████████
+        /// //////////////////////////////////////////////////////////////
+        /// <summary>////////////////// Setup //////////////////</summary>
+        /// //////////////////////////////////////////////////////////////
         public void Setup(int hexX, int hexY, HexagonColor hexC = HexagonColor.White)
         {
             x = hexX;
@@ -52,9 +52,6 @@ namespace Assets.Scripts.Project.Manager.Hexagon
 
         private void FixNeighbors()
         {
-
-            Debug.Log("Hex"+x+"-"+y+ ": "+(x % 2 == 0));
-
             GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.TopHex, x + "-" + (y + 1));
             GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.BotHex, x + "-" + (y - 1));
 
@@ -74,17 +71,20 @@ namespace Assets.Scripts.Project.Manager.Hexagon
                 GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.RTHex, (x + 1) + "-" + (y + 1));
                 GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.RBHex, (x + 1) + "-" + y);
             }
+
         }
 
-
-        /// ██████████████████████████████████████████████████████████████████████████
-        /// <summary>███████████████████████ OnPress ███████████████████████</summary>
-        /// ██████████████████████████████████████████████████████████████████████████
+        /// //////////////////////////////////////////////////////////////
+        /// <summary>//////////////// OnPress //////////////////</summary>
+        /// //////////////////////////////////////////////////////////////
         public void OnPress()
         {
             dispatcher.Dispatch(HexagonEvent.Press);
         }
 
+        /// //////////////////////////////////////////////////////////////
+        /// <summary>////////////////// Pool ///////////////////</summary>
+        /// //////////////////////////////////////////////////////////////
         #region Pool Methods
         public string PoolKey { get; set; }
 
