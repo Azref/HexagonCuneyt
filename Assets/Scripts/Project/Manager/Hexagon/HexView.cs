@@ -1,6 +1,8 @@
 ﻿using Assets.Scripts.Core.Manager.Pool;
 using Assets.Scripts.Core.View;
 using Assets.Scripts.Project.Enums;
+using Assets.Scripts.Project.Extension;
+using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,7 +21,9 @@ namespace Assets.Scripts.Project.Manager.Hexagon
 
         public int y;
 
-        public HexView TopHex, BotHex, LTHex, LBHex, RTHex, RBHex;
+        [ShowInInspector]
+        [DictionaryDrawerSettings(DisplayMode = DictionaryDisplayOptions.Foldout)]
+        public Dictionary<HexNeighbor, HexView> Neighbors = new Dictionary<HexNeighbor, HexView>();
 
         /// ██████████████████████████████████████████████████████████████████████████
         /// <summary>████████████████████████ Setup ████████████████████████</summary>
@@ -43,34 +47,35 @@ namespace Assets.Scripts.Project.Manager.Hexagon
 
             GetComponent<SpriteRenderer>().color = HexInfo.Colors[color];
 
-            fixNeighbors();
+            FixNeighbors();
         }
 
-        private void fixNeighbors()
+        private void FixNeighbors()
         {
+
+            Debug.Log("Hex"+x+"-"+y+ ": "+(x % 2 == 0));
+
+            GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.TopHex, x + "-" + (y + 1));
+            GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.BotHex, x + "-" + (y - 1));
+
             if (x % 2 == 0)
             {
-                LTHex = CheckAndAssign(GridInfo.HexDict, (x - 1) + "-" + y);
-                LBHex = CheckAndAssign(GridInfo.HexDict, (x - 1) + "-" + (y - 1));
-                RTHex = CheckAndAssign(GridInfo.HexDict, (x + 1) + "-" + y);
-                RBHex = CheckAndAssign(GridInfo.HexDict, (x + 1) + "-" + (y - 1));
+                GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.RTHex, (x + 1) + "-" + y);
+                GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.RBHex, (x + 1) + "-" + (y - 1));
+
+                GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.LTHex, (x - 1) + "-" + y);
+                GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.LBHex, (x - 1) + "-" + (y - 1));
             }
             else
             {
-                LTHex = CheckAndAssign(GridInfo.HexDict, (x - 1) + "-" + (y + 1));
-                LBHex = CheckAndAssign(GridInfo.HexDict, (x - 1) + "-" + y);
-                RTHex = CheckAndAssign(GridInfo.HexDict, (x + 1) + "-" + (y + 1));
-                RBHex = CheckAndAssign(GridInfo.HexDict, (x + 1) + "-" + y);
+                GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.LTHex, (x - 1) + "-" + (y + 1));
+                GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.LBHex, (x - 1) + "-" + y);
+
+                GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.RTHex, (x + 1) + "-" + (y + 1));
+                GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.RBHex, (x + 1) + "-" + y);
             }
         }
 
-        private HexView CheckAndAssign(Dictionary<string, HexView> Dictionary, string val)
-        {
-            if (Dictionary.ContainsKey(val))
-                return Dictionary[val];
-            else
-                return null;
-        }
 
         /// ██████████████████████████████████████████████████████████████████████████
         /// <summary>███████████████████████ OnPress ███████████████████████</summary>
