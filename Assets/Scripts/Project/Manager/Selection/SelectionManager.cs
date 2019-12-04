@@ -1,7 +1,6 @@
 ﻿using Assets.Scripts.Project.Enums;
 using Assets.Scripts.Project.View.Hexagon;
 using strange.extensions.mediation.impl;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Project.Manager.Selection
@@ -172,7 +171,6 @@ namespace Assets.Scripts.Project.Manager.Selection
         ///                         3 ----- 2
         ///    
         ///
-
         internal void Draw()
         {
             var hexs = HexInfo.SelectedHexs;

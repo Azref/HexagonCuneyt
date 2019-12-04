@@ -21,6 +21,6 @@ public class RV_Hexagon : SerializedScriptableObject
 
     public Dictionary<HexagonColor, Color> Colors;
 
-    public List<HexView> SelectedHexs;
+    public List<HexView> SelectedHexs = new List<HexView>();
 
 }

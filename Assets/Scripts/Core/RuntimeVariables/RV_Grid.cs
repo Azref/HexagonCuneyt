@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Runtime Variables/Int Width-Height", order = 9)]
+[CreateAssetMenu(menuName = "Runtime Variables/Grid", order = 9)]
 public class RV_Grid : SerializedScriptableObject
 {
     public int width;

@@ -83,14 +83,17 @@ namespace Assets.Scripts.Project.Manager.Game
 
                 string param = hex.x.ToString() + "-" + hex.y.ToString() + "/" +  cornerId.ToString();
 
-                if (Hex.SelectedHexs[0] != null)
+                if (Hex.SelectedHexs.Count > 0)
+                {
+                    if (Hex.SelectedHexs[0] != null)
                     Hex.SelectedHexs[0].transform.SetParent(transform);
 
-                if (Hex.SelectedHexs[1] != null)
-                    Hex.SelectedHexs[1].transform.SetParent(transform);
+                    if (Hex.SelectedHexs[1] != null)
+                        Hex.SelectedHexs[1].transform.SetParent(transform);
 
-                if (Hex.SelectedHexs[2] != null)
-                    Hex.SelectedHexs[2].transform.SetParent(transform);
+                    if (Hex.SelectedHexs[2] != null)
+                        Hex.SelectedHexs[2].transform.SetParent(transform);
+                }
 
                 dispatcher.Dispatch(GameManagerEvent.MakeSelection, param);
             }
