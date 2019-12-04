@@ -33,23 +33,31 @@ namespace Assets.Scripts.Project.View.Hexagon
             x = hexX;
 
             y = hexY;
- 
+
             color = hexC;
 
             transform.name = "Hexagon_" + x + "_" + y;
 
-            transform.localPosition = new Vector3(x * HexInfo.DistX, y * HexInfo.Height);
-
-            if (x % 2 == 1) transform.Translate(0, HexInfo.Height *.5f, 0);
-
-            if (hexC == HexagonColor.White)
-                color = (HexagonColor)UnityEngine.Random.Range(1, Enum.GetValues(typeof(HexagonColor)).Length);
-
-            GetComponent<SpriteRenderer>().color = HexInfo.Colors[color];
+            PlaceIt();
 
             FixNeighbors();
+
+            ColorIt();
         }
 
+        /// //////////////////////////////////////////////////////////////
+        /// <summary>//////////////// PlaceIt //////////////////</summary>
+        /// //////////////////////////////////////////////////////////////
+        private void PlaceIt()
+        {
+            transform.localPosition = new Vector3(x * HexInfo.DistX, y * HexInfo.Height);
+
+            if (x % 2 == 1) transform.Translate(0, HexInfo.Height * .5f, 0);
+        }
+
+        /// //////////////////////////////////////////////////////////////
+        /// <summary>////////////// FixNeighbors ///////////////</summary>
+        /// //////////////////////////////////////////////////////////////
         private void FixNeighbors()
         {
             GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.TopHex, x + "-" + (y + 1));
@@ -75,12 +83,44 @@ namespace Assets.Scripts.Project.View.Hexagon
         }
 
         /// //////////////////////////////////////////////////////////////
-        /// <summary>//////////////// OnPress //////////////////</summary>
+        /// <summary>//////////////// ColorIt //////////////////</summary>
         /// //////////////////////////////////////////////////////////////
-        public void OnPress()
+        private void ColorIt()
         {
-            dispatcher.Dispatch(HexagonEvent.Press);
+            if (color == HexagonColor.White)
+                color = (HexagonColor)UnityEngine.Random.Range(1, Enum.GetValues(typeof(HexagonColor)).Length);
+
+            if(CheckColorMatch())
+            {
+                ColorIt();
+                return;
+            }
+
+            GetComponent<SpriteRenderer>().color = HexInfo.Colors[color];
         }
+
+        private bool CheckColorMatch()
+        {
+            if (x == 0 || y == 0)
+                return false;
+
+            if ( y != GridInfo.height-1 && Neighbors[HexNeighbor.LBHex].color == color && Neighbors[HexNeighbor.LTHex].color == color)
+            {
+                color = HexagonColor.White;
+                return true;
+            }
+
+            if (Neighbors[HexNeighbor.LBHex].color == color && 
+                Neighbors[HexNeighbor.BotHex].color == color )
+            {
+                color = HexagonColor.White;
+                return true;
+
+            }
+            return false;
+
+        }
+
 
         /// //////////////////////////////////////////////////////////////
         /// <summary>////////////////// Pool ///////////////////</summary>

@@ -30,13 +30,21 @@ namespace Assets.Scripts.Project.Manager.Game
         /// //////////////////////////////////////////////////////////////
         void Update()
         {
+            //if (Input.touchCount > 0)
+            //{
+            //    Touch touch = Input.GetTouch(0);
+
+            //    if(touch.phase == TouchPhase.)
+            //        Debug.Log("-");
+
+            //    if (touch.phase == TouchPhase.Stationary || touch.phase == TouchPhase.Moved)
+            //    {
+
+            //    }
+
+            //}
             if (Input.GetMouseButtonDown(0))
-            {
-                if (Input.GetMouseButtonDown(0))
-                {
-                    FindClosestCorner();
-                }
-            }
+                FindClosestCorner();
         }
 
         /// //////////////////////////////////////////////////////////////

@@ -15,7 +15,7 @@ namespace Assets.Scripts.Project.View.Hexagon
     {
         [Inject] public HexView view { get; set; }
 
-        [Inject] public IGameModel Game { get; set; }
+        //[Inject] public IGameModel Game { get; set; }
 
         public override void OnRegister()
         {
