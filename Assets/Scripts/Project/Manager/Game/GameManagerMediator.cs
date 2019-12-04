@@ -1,3 +1,4 @@
+using System;
 using Assets.Scripts.Core.Manager.Pool;
 using Assets.Scripts.Core.Model.Game;
 using Assets.Scripts.Project.Enums;
@@ -7,9 +8,10 @@ using strange.extensions.mediation.impl;
 
 namespace Assets.Scripts.Project.Manager.Game
 {
-    public enum HexManagerEvent
+    public enum GameManagerEvent
     {
-        GridReady
+        GridReady,
+        MakeSelection
     }
 
     public class GameManagerMediator : EventMediator
@@ -22,13 +24,16 @@ namespace Assets.Scripts.Project.Manager.Game
 
         public override void OnRegister()
         {
-            view.Grid = Game.Grid;
+			view.dispatcher.AddListener(GameManagerEvent.GridReady,OnGridReady);
 
-            view.Hex = Game.Hexagon;
-
-			view.dispatcher.AddListener(HexManagerEvent.GridReady,OnGridReady);
+			view.dispatcher.AddListener(GameManagerEvent.MakeSelection, OnMakeSelection);
 
             dispatcher.AddListener(GameEvent.BuildGrid, OnBuildGrid);
+        }
+
+        private void OnMakeSelection(IEvent payload)
+        {
+            dispatcher.Dispatch(GameEvent.MakeSelection, (string)payload.data);
         }
 
         private void OnBuildGrid(IEvent payload)
@@ -45,7 +50,9 @@ namespace Assets.Scripts.Project.Manager.Game
 
         public override void OnRemove()
         {
-			view.dispatcher.RemoveListener(HexManagerEvent.GridReady,OnGridReady);
+			view.dispatcher.RemoveListener(GameManagerEvent.GridReady,OnGridReady);
+
+            view.dispatcher.RemoveListener(GameManagerEvent.MakeSelection, OnMakeSelection);
 
             dispatcher.RemoveListener(GameEvent.BuildGrid, OnBuildGrid);
         }

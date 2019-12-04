@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Project.Enums;
+using Assets.Scripts.Project.View.Hexagon;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,5 +21,6 @@ public class RV_Hexagon : SerializedScriptableObject
 
     public Dictionary<HexagonColor, Color> Colors;
 
+    public List<HexView> SelectedHexs;
 
 }

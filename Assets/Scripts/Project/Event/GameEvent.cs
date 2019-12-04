@@ -3,6 +3,7 @@
     public enum GameEvent
     {
         BuildGrid,
-        FixCamera
+        FixCamera,
+        MakeSelection
     }
 }

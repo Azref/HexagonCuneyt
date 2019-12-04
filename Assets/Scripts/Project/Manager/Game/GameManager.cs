@@ -4,6 +4,7 @@ using UnityEngine;
 using Assets.Scripts.Core.View;
 using Assets.Scripts.Project.Enums;
 using Assets.Scripts.Project.View.Hexagon;
+using System;
 
 namespace Assets.Scripts.Project.Manager.Game
 {
@@ -16,9 +17,6 @@ namespace Assets.Scripts.Project.Manager.Game
         public RV_Grid Grid;
 
         public RV_Hexagon Hex;
-
-        public LineRenderer Liner;
-
 
         protected override void Start()
         {
@@ -36,53 +34,61 @@ namespace Assets.Scripts.Project.Manager.Game
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-                    RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-
-                    if (hit.collider != null && hit.transform.CompareTag("Hexagon"))
-                    {
-                        Vector2 aimVector = hit.point - (Vector2)hit.transform.position;
-                        float Aim = Vector2.SignedAngle(aimVector, Vector2.down) + 180;
-                        int RotId = Mathf.FloorToInt(Aim / 60);
-                        var RotHex = hit.transform.GetComponent<HexView>();
-
-                        Debug.Log("----------------------");
-                        Debug.Log(hit.transform.name);
-                        //Debug.Log("Target Distance  : " + aimVector);
-                        //Debug.Log("Aim              : " + Aim);
-                        //Debug.Log("RotDot           : " + RotId);
-
-                        RotateHex(RotHex, RotId);
-                    }
+                    FindClosestCorner();
                 }
             }
         }
 
         /// //////////////////////////////////////////////////////////////
-        /// <summary>///////////////// Rotate //////////////////</summary>
+        /// ///////////////////// Find CornerId //////////////////////////
         /// //////////////////////////////////////////////////////////////
-        private void RotateHex(HexView rotHex, int rotId)
+        /// 
+        ///              CornerId representation figure 
+        ///
+        ///                         5 ----- 0
+        ///                        -         -
+        ///                      -             -
+        ///                    4-               -1
+        ///                      -             -
+        ///                        -         -
+        ///                         3 ----- 2
+        ///         
+        /// <summary>
+        /// When we touch ona hexagon this method finds the Id of the closest corner;
+        /// </summary>
+        private void FindClosestCorner()
         {
-            HexView rotHex2, rotHex3 = null;
-            if (rotHex.Neighbors.ContainsKey((HexNeighbor)(rotId + 0)))
-                rotHex2 = rotHex.Neighbors[(HexNeighbor)(rotId + 0)];
-            else
-                return;
+            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
-            if (rotHex.Neighbors.ContainsKey( (HexNeighbor)((rotId + 1) % 6)) )
-                rotHex3 = rotHex.Neighbors[(HexNeighbor)((rotId + 1) % 6)];
-            else
-                return;
+            if (hit.collider != null && hit.transform.CompareTag("Hexagon"))
+            {
+                Vector2 aimVector = hit.point - (Vector2)hit.transform.position;
+                float aim = Vector2.SignedAngle(aimVector, Vector2.down) + 180;
+                int cornerId = Mathf.FloorToInt(aim / 60);
+                var hex = hit.transform.GetComponent<HexView>();
 
-            //rotHex.transform.localScale = Vector3.one * .7f;
-            //rotHex2.transform.localScale = Vector3.one * .7f;
-            //rotHex3.transform.localScale = Vector3.one * .7f;
+                //Debug.Log("----------------------");
+                //Debug.Log(hit.transform.name);
+                //Debug.Log("Target Distance  : " + aimVector);
+                //Debug.Log("Aim              : " + Aim);
+                //Debug.Log("CornerId         : " + CornerId);
 
-            Liner.positionCount = 3;
-            Liner.SetPosition(0, rotHex.transform.position);
-            Liner.SetPosition(1, rotHex2.transform.position);
-            Liner.SetPosition(2, rotHex3.transform.position);
+                string param = hex.x.ToString() + "-" + hex.y.ToString() + "/" +  cornerId.ToString();
+
+                if (Hex.SelectedHexs[0] != null)
+                    Hex.SelectedHexs[0].transform.SetParent(transform);
+
+                if (Hex.SelectedHexs[1] != null)
+                    Hex.SelectedHexs[1].transform.SetParent(transform);
+
+                if (Hex.SelectedHexs[2] != null)
+                    Hex.SelectedHexs[2].transform.SetParent(transform);
+
+                dispatcher.Dispatch(GameManagerEvent.MakeSelection, param);
+            }
         }
-        
+
+
         /// //////////////////////////////////////////////////////////////
         /// <summary>//////////////// BuildGrid ////////////////</summary>
         /// //////////////////////////////////////////////////////////////
@@ -109,7 +115,7 @@ namespace Assets.Scripts.Project.Manager.Game
                 }
             }
 
-			dispatcher.Dispatch(HexManagerEvent.GridReady);
+			dispatcher.Dispatch(GameManagerEvent.GridReady);
 
         }
     }

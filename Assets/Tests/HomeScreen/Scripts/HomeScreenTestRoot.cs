@@ -3,7 +3,7 @@ using Assets.Scripts.Core.Manager.Screen;
 using strange.extensions.context.impl;
 using UnityEngine;
 
-namespace Assets.Tests.Screen.Home.Scripts
+namespace Assets.Tests.HomeScreen.Scripts
 {
     /// <summary>
     /// Root class which is attached on root object on scene

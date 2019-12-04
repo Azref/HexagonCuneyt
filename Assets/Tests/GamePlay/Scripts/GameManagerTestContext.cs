@@ -1,21 +1,22 @@
 #if UNITY_EDITOR || DEBUG
 using Assets.Scripts.Project.Manager.Game;
+using Assets.Scripts.Project.Manager.Selection;
 using Assets.Scripts.Project.View.Cam;
 using Assets.Scripts.Project.View.Hexagon;
 using Assets.Tests.Base;
-using Assets.Tests.Screen.GridManager.Scripts.Controller;
+using Assets.Tests.GamePlay.Scripts.Controller;
 using strange.extensions.context.api;
 using UnityEngine;
 
-namespace Assets.Tests.Screen.GridManager.Scripts
+namespace Assets.Tests.GamePlay.Scripts
 {
-    public class GridBuildTestContext : BaseTestContext
+    public class GameManagerTestContext : BaseTestContext
     {
-        public GridBuildTestContext(MonoBehaviour view) : base(view)
+        public GameManagerTestContext(MonoBehaviour view) : base(view)
         {
         }
 
-        public GridBuildTestContext(MonoBehaviour view, ContextStartupFlags flags) : base(view, flags)
+        public GameManagerTestContext(MonoBehaviour view, ContextStartupFlags flags) : base(view, flags)
         {
         }
 
@@ -26,8 +27,9 @@ namespace Assets.Tests.Screen.GridManager.Scripts
             mediationBinder.Bind<GameManager>().To<GameManagerMediator>();
             mediationBinder.Bind<HexView>().To<HexMediator>();
             mediationBinder.Bind<CamManager>().To<CamManagerMediator>();
+            mediationBinder.Bind<SelectionManager>().To<SelectionManagerMediator>();
 
-            commandBinder.Bind(ContextEvent.START).To<GridBuildTestCommand>().Once();
+            commandBinder.Bind(ContextEvent.START).To<GameManagerTestCommand>().Once();
         }
     }
 }

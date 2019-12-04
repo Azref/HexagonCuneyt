@@ -1,11 +1,11 @@
 #if UNITY_EDITOR || DEBUG
 using Assets.Tests.Base;
 using Assets.Scripts.Project.View.Home;
-using Assets.Tests.Screen.Home.Scripts.Controller;
+using Assets.Tests.HomeScreen.Scripts.Controller;
 using strange.extensions.context.api;
 using UnityEngine;
 
-namespace Assets.Tests.Screen.Home.Scripts
+namespace Assets.Tests.HomeScreen.Scripts
 {
     /// <summary>
     /// Test context for home screen.

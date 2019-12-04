@@ -3,13 +3,13 @@ using strange.extensions.command.impl;
 using Assets.Scripts.Project.Event;
 using UnityEngine;
 
-namespace Assets.Tests.Screen.GridManager.Scripts.Controller
+namespace Assets.Tests.GamePlay.Scripts.Controller
 {
-    public class GridBuildTestCommand : EventCommand
+    public class GameManagerTestCommand : EventCommand
     {
         public override void Execute()
         {
-            Debug.Log("GridManagerTestCommand");
+            Debug.Log("GameManagerTestCommand");
 
             dispatcher.Dispatch(GameEvent.BuildGrid);
         }

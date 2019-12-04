@@ -15,6 +15,7 @@ using Assets.Scripts.Project.Event;
 using Assets.Scripts.Project.View.Hexagon;
 using Assets.Scripts.Project.View.Cam;
 using Assets.Scripts.Project.Manager.Game;
+using Assets.Scripts.Project.Manager.Selection;
 
 namespace Assets.Scripts.Project.Context
 {
@@ -56,9 +57,10 @@ namespace Assets.Scripts.Project.Context
             mediationBinder.Bind<GameManager>().To<GameManagerMediator>();
             mediationBinder.Bind<HexView>().To<HexMediator>();
             mediationBinder.Bind<CamManager>().To<CamManagerMediator>();
+            mediationBinder.Bind<SelectionManager>().To<SelectionManagerMediator>();
 
             // It is the start point of application. It works after all bindings are done
-            commandBinder.Bind(ContextEvent.START).To<HomeScreenCommand>().Once();
+            commandBinder.Bind(ContextEvent.START).To<StartCommand>().Once();
 
             //Any event that fire across the Context boundary get mapped here.
             //crossContextBridge.Bind(MainEvent.GAME_COMPLETE);

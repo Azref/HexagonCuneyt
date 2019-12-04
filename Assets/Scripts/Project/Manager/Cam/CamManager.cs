@@ -55,7 +55,7 @@ namespace Assets.Scripts.Project.View.Cam
 
             //float newZoom = _zoomSize;// Mathf.Lerp(5, 20, _zoomSize);
 
-            _cam.orthographicSize = _zoomSize + 1;
+            _cam.orthographicSize = _zoomSize + 1.5f;
 
             //_cam.orthographicSize = Mathf.Clamp(Mathf.Lerp(_cam.orthographicSize, orthographicSize, Time.deltaTime * 20f), 8f, Mathf.Infinity);
         }
@@ -74,6 +74,9 @@ namespace Assets.Scripts.Project.View.Cam
         /// </summary>/////////////////////////////////////////////////////////////
         private void CalculateMoveAndZoom()
         {
+            if (Grid.HexList.Count == 0)
+                return;
+
             if (Grid.HexList.Count == 1)
             {
                 _movePoint = Grid.HexList[0].position;
