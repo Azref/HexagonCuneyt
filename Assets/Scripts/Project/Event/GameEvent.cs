@@ -4,6 +4,7 @@
     {
         BuildGrid,
         FixCamera,
-        MakeSelection
+        MakeSelection,
+        CheckSelectionMatch
     }
 }

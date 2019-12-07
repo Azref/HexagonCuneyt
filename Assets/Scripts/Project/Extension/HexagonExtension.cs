@@ -26,6 +26,13 @@ namespace Assets.Scripts.Project.Extension
             Dictionary[val].Neighbors[(HexNeighbor)(((int)NeighborId + 3)% Enum.GetValues(typeof(HexNeighbor)).Length)] = hex;
         }
 
+        public static void Copy(this HexView hex, HexView hexCopy)
+        {
+            hex.isBomb = hexCopy.isBomb;
+
+            hex.ColorIt(false, hexCopy.color);
+        }
+
     }
 
 }

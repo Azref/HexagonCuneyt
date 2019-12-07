@@ -2,6 +2,7 @@
 using Assets.Scripts.Core.View;
 using Assets.Scripts.Project.Enums;
 using Assets.Scripts.Project.Extension;
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,15 @@ namespace Assets.Scripts.Project.View.Hexagon
 
         public RV_Hexagon HexInfo;
 
-        public HexagonColor color;
+        public int color;
 
         public int x;
 
         public int y;
+
+        public bool isBomb = false;
+
+        private Vector3 _pos;
 
         [ShowInInspector]
         [DictionaryDrawerSettings(DisplayMode = DictionaryDisplayOptions.Foldout)]
@@ -28,7 +33,7 @@ namespace Assets.Scripts.Project.View.Hexagon
         /// //////////////////////////////////////////////////////////////
         /// <summary>////////////////// Setup //////////////////</summary>
         /// //////////////////////////////////////////////////////////////
-        public void Setup(int hexX, int hexY, HexagonColor hexC = HexagonColor.White)
+        public void Setup(int hexX, int hexY, int hexC = 0)
         {
             x = hexX;
 
@@ -42,7 +47,9 @@ namespace Assets.Scripts.Project.View.Hexagon
 
             FixNeighbors();
 
-            ColorIt();
+            ColorIt(true);
+
+            BuildAnimation();
         }
 
         /// //////////////////////////////////////////////////////////////
@@ -53,12 +60,14 @@ namespace Assets.Scripts.Project.View.Hexagon
             transform.localPosition = new Vector3(x * HexInfo.DistX, y * HexInfo.Height);
 
             if (x % 2 == 1) transform.Translate(0, HexInfo.Height * .5f, 0);
+
+            _pos = transform.position;
         }
 
         /// //////////////////////////////////////////////////////////////
         /// <summary>////////////// FixNeighbors ///////////////</summary>
         /// //////////////////////////////////////////////////////////////
-        private void FixNeighbors()
+        public void FixNeighbors()
         {
             GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.TopHex, x + "-" + (y + 1));
             GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.BotHex, x + "-" + (y - 1));
@@ -79,49 +88,72 @@ namespace Assets.Scripts.Project.View.Hexagon
                 GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.RTHex, (x + 1) + "-" + (y + 1));
                 GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.RBHex, (x + 1) + "-" + y);
             }
-
         }
 
         /// //////////////////////////////////////////////////////////////
         /// <summary>//////////////// ColorIt //////////////////</summary>
         /// //////////////////////////////////////////////////////////////
-        private void ColorIt()
+        public void ColorIt(bool buildSetup, int specificColor = 0)
         {
-            if (color == HexagonColor.White)
-                color = (HexagonColor)UnityEngine.Random.Range(1, Enum.GetValues(typeof(HexagonColor)).Length);
-
-            if(CheckColorMatch())
+            if (buildSetup)
             {
-                ColorIt();
-                return;
+                //color = (HexagonColor)UnityEngine.Random.Range(1, Enum.GetValues(typeof(HexagonColor)).Length);
+                color = UnityEngine.Random.Range(1, HexInfo.Colors.Count);
+
+                if (CheckColorMatchForBuildSetup())
+                {
+                    ColorIt(buildSetup);
+                    return;
+                }
             }
+            else
+                color = specificColor;
 
             GetComponent<SpriteRenderer>().color = HexInfo.Colors[color];
         }
 
-        private bool CheckColorMatch()
+        private bool CheckColorMatchForBuildSetup()
         {
-            if (x == 0 || y == 0)
+            if (x == 0)
                 return false;
 
-            if ( y != GridInfo.height-1 && Neighbors[HexNeighbor.LBHex].color == color && Neighbors[HexNeighbor.LTHex].color == color)
+            if (Neighbors.ContainsKey(HexNeighbor.LBHex) &&
+                Neighbors[HexNeighbor.LBHex].color == color &&
+                Neighbors.ContainsKey(HexNeighbor.LTHex) &&
+                Neighbors[HexNeighbor.LTHex].color == color)
             {
-                color = HexagonColor.White;
+                color = 0;
                 return true;
             }
 
-            if (Neighbors[HexNeighbor.LBHex].color == color && 
+            if (
+                Neighbors.ContainsKey(HexNeighbor.LBHex) &&
+                Neighbors[HexNeighbor.LBHex].color == color &&
+                Neighbors.ContainsKey(HexNeighbor.BotHex) &&
                 Neighbors[HexNeighbor.BotHex].color == color )
             {
-                color = HexagonColor.White;
+                color = 0;
                 return true;
-
             }
             return false;
-
         }
 
+        /// //////////////////////////////////////////////////////////////
+        /// <summary>//////////////// Animate //////////////////</summary>
+        /// //////////////////////////////////////////////////////////////
+        internal void BuildAnimation()
+        {
+            gameObject.SetActive(false);
 
+            Invoke("Animate",.2f);
+        }
+
+        internal void Animate()
+        {
+            transform.position = _pos + Vector3.up * (GridInfo.height+5) * HexInfo.Height;
+            gameObject.SetActive(true);
+            transform.DOMove(_pos, .7f).SetEase(Ease.OutCirc).SetDelay(y * .1f + x * .2f);
+        }
         /// //////////////////////////////////////////////////////////////
         /// <summary>////////////////// Pool ///////////////////</summary>
         /// //////////////////////////////////////////////////////////////

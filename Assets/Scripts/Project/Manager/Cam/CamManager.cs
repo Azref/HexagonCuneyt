@@ -25,7 +25,7 @@ namespace Assets.Scripts.Project.View.Cam
 
         private void LateUpdate()
         {
-            FixCam();
+            //FixCam();
         }
 
         internal void FixCam()
@@ -39,7 +39,7 @@ namespace Assets.Scripts.Project.View.Cam
 
         private void Zoom()
         {
-            float orthographicSize = _cam.orthographicSize;
+            //float orthographicSize = _cam.orthographicSize;
 
             //Debug.Log("--------------------");
             //Debug.Log(_bounds);
@@ -74,12 +74,9 @@ namespace Assets.Scripts.Project.View.Cam
         /// </summary>/////////////////////////////////////////////////////////////
         private void CalculateMoveAndZoom()
         {
-            if (Grid.HexList.Count == 0)
-                return;
-
-            if (Grid.HexList.Count == 1)
+            if (Grid.HexList.Count < 2)
             {
-                _movePoint = Grid.HexList[0].position;
+                _movePoint = Vector3.zero;
 
                 _zoomSize = 10;
             }

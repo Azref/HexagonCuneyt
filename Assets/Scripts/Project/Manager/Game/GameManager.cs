@@ -1,9 +1,9 @@
-﻿using strange.extensions.mediation.impl;
-using Assets.Scripts.Core.Manager.Screen;
+﻿using Assets.Scripts.Core.Manager.Screen;
 using UnityEngine;
 using Assets.Scripts.Core.View;
 using Assets.Scripts.Project.Enums;
 using Assets.Scripts.Project.View.Hexagon;
+using Assets.Scripts.Core.Enums;
 using System;
 
 namespace Assets.Scripts.Project.Manager.Game
@@ -14,9 +14,13 @@ namespace Assets.Scripts.Project.Manager.Game
 
         public GameObject HexPrefab;
 
+        public RV_GameStatus Status;
+
         public RV_Grid Grid;
 
         public RV_Hexagon Hex;
+
+        private Vector3 _donwPos;
 
         protected override void Start()
         {
@@ -26,25 +30,64 @@ namespace Assets.Scripts.Project.Manager.Game
         }
 
         /// //////////////////////////////////////////////////////////////
+        /// <summary>//////////////// BuildGrid ////////////////</summary>
+        /// //////////////////////////////////////////////////////////////
+        public void BuildGrid()
+        {
+            Debug.Log("GridManager building...");
+            
+            for (int gx = 0; gx < Grid.width; gx++)
+            {
+                for (int gy = 0; gy < Grid.height; gy++)
+                {
+                    var hex = pool.Get(PoolKey.Hexagon.ToString()).GetComponent<HexView>();
+
+                    hex.transform.SetParent(transform);
+
+                    string key = gx + "-" + gy;
+
+                    Grid.HexDict.Add(key, hex);
+
+                    Grid.HexList.Add(hex.transform);
+
+                    hex.Setup(gx, gy);
+
+                    hex.BuildAnimation();
+                }
+            }
+
+			dispatcher.Dispatch(GameManagerEvent.GridReady);
+
+        }
+
+        /// //////////////////////////////////////////////////////////////
         /// <summary>////////////////// INPUT //////////////////</summary>
         /// //////////////////////////////////////////////////////////////
         void Update()
         {
-            //if (Input.touchCount > 0)
-            //{
-            //    Touch touch = Input.GetTouch(0);
-
-            //    if(touch.phase == TouchPhase.)
-            //        Debug.Log("-");
-
-            //    if (touch.phase == TouchPhase.Stationary || touch.phase == TouchPhase.Moved)
-            //    {
-
-            //    }
-
-            //}
-            if (Input.GetMouseButtonDown(0))
+            if(CheckTouch())
                 FindClosestCorner();
+        }
+
+        private bool CheckTouch()
+        {
+            if (Status.value.HasFlag(GameStatus.Blocked | GameStatus.HexIsRotating) || !Status.value.HasFlag(GameStatus.GameIsPlaying))
+                return false;
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                _donwPos = Input.mousePosition;
+
+                return false;
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                var dist = Vector3.Distance(_donwPos, Input.mousePosition);
+
+                return dist < 10;
+            }
+            else
+                return false;
         }
 
         /// //////////////////////////////////////////////////////////////
@@ -99,35 +142,13 @@ namespace Assets.Scripts.Project.Manager.Game
             }
         }
 
+        /// //////////////////////////////////////////////////////////////
+        /// ////////////////// Check Selection Match /////////////////////
+        /// //////////////////////////////////////////////////////////////
 
-        /// //////////////////////////////////////////////////////////////
-        /// <summary>//////////////// BuildGrid ////////////////</summary>
-        /// //////////////////////////////////////////////////////////////
-        public void BuildGrid()
+        internal void CheckSelectionMatch()
         {
-            Debug.Log("GridManager building...");
             
-            for (int gx = 0; gx < Grid.width; gx++)
-            {
-                for (int gy = 0; gy < Grid.height; gy++)
-                {
-                    var hex = pool.Get(PoolKey.Hexagon.ToString()).GetComponent<HexView>();
-
-                    hex.transform.SetParent(transform);
-
-                    string key = gx + "-" + gy;
-
-                    Grid.HexDict.Add(key, hex);
-
-                    Grid.HexList.Add(hex.transform);
-
-                    hex.Setup(gx, gy);
-
-                }
-            }
-
-			dispatcher.Dispatch(GameManagerEvent.GridReady);
-
         }
     }
 }

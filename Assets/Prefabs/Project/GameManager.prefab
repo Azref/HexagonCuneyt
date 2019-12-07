@@ -45,6 +45,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HexPrefab: {fileID: 613860337480165084, guid: 6ba97de2873ddf24898c3a38116c6829,
     type: 3}
+  Status: {fileID: 11400000, guid: af4d5e53ba38aa4488223d93c83c301e, type: 2}
   Grid: {fileID: 11400000, guid: 1918b669e5bd6244ab9cf068867ee6b1, type: 2}
   Hex: {fileID: 11400000, guid: 3ec0546d211f36c47bc7199561c7bbdd, type: 2}
-  Liner: {fileID: 0}

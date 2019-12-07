@@ -21,6 +21,7 @@ namespace Assets.Scripts.Project.View.Cam
         public override void OnRegister()
         {
             view.dispatcher.AddListener(CamManagerEvent.Press, OnPress);
+
             dispatcher.AddListener(GameEvent.FixCamera, OnFixCamera);
         }
 
@@ -38,6 +39,7 @@ namespace Assets.Scripts.Project.View.Cam
         public override void OnRemove()
         {
             view.dispatcher.RemoveListener(CamManagerEvent.Press, OnPress);
+
             dispatcher.RemoveListener(GameEvent.FixCamera, OnFixCamera);
         }
     }

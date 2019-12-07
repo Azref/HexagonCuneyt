@@ -10,12 +10,12 @@ namespace Assets.Scripts.Core.Enums
     public enum GameStatus
     {
         Blocked = 1 << 0,
-        Confirm = 1,
-        Home = 2,
+        Confirm = 1 << 1,
+        Home = 1 << 2,
 
-        Page1 = 1 << 3,
-        Page2 = 1 << 4,
-        Page3 = 1 << 5,
+        GameIsPlaying = 1 << 3,
+        HexIsRotating = 1 << 4,
+        SelectedHexes = 1 << 5,
         //Pages = Page1 | Page2 | Page3,
 
 		/*EDITOR-BREAKPOINT*/ 

@@ -19,7 +19,7 @@ public class RV_Hexagon : SerializedScriptableObject
 
     public float DistX { get { return DistHorizontal; } }
 
-    public Dictionary<HexagonColor, Color> Colors;
+    public List<Color> Colors = new List<Color>();
 
     public List<HexView> SelectedHexs = new List<HexView>();
 

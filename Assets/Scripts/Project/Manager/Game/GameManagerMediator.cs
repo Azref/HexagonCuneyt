@@ -29,6 +29,14 @@ namespace Assets.Scripts.Project.Manager.Game
 			view.dispatcher.AddListener(GameManagerEvent.MakeSelection, OnMakeSelection);
 
             dispatcher.AddListener(GameEvent.BuildGrid, OnBuildGrid);
+
+            dispatcher.AddListener(GameEvent.CheckSelectionMatch, OnCheckSelectionMatch);
+        }
+
+        public void OnGridReady()
+		{
+            Game.Status.value |= Core.Enums.GameStatus.GameIsPlaying;
+            dispatcher.Dispatch(GameEvent.FixCamera);
         }
 
         private void OnMakeSelection(IEvent payload)
@@ -43,9 +51,9 @@ namespace Assets.Scripts.Project.Manager.Game
             view.BuildGrid();
         }
 
-        public void OnGridReady()
-		{
-            dispatcher.Dispatch(GameEvent.FixCamera);
+        private void OnCheckSelectionMatch(IEvent payload)
+        {
+            view.CheckSelectionMatch();
         }
 
         public override void OnRemove()
@@ -55,6 +63,8 @@ namespace Assets.Scripts.Project.Manager.Game
             view.dispatcher.RemoveListener(GameManagerEvent.MakeSelection, OnMakeSelection);
 
             dispatcher.RemoveListener(GameEvent.BuildGrid, OnBuildGrid);
+
+            dispatcher.RemoveListener(GameEvent.CheckSelectionMatch, OnCheckSelectionMatch);
         }
     }
 }
