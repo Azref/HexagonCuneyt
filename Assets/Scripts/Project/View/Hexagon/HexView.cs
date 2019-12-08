@@ -5,6 +5,7 @@ using Assets.Scripts.Project.Extension;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,6 +26,8 @@ namespace Assets.Scripts.Project.View.Hexagon
         public bool isStar = false;
 
         public bool isBomb = false;
+
+        public bool isDead = false;
 
         private Vector3 _pos;
 
@@ -71,9 +74,9 @@ namespace Assets.Scripts.Project.View.Hexagon
         /// //////////////////////////////////////////////////////////////
         private void PlaceIt()
         {
-            transform.position = new Vector3(x * Info.DistX, y * Info.Height);
+            transform.position = new Vector3(x * Info.GridDistX, y * Info.HexHeight);
 
-            if (x % 2 == 1) transform.Translate(0, Info.Height * .5f, 0);
+            if (x % 2 == 1) transform.Translate(0, Info.HexHeight * .5f, 0);
 
             _pos = transform.position;
         }
@@ -166,22 +169,55 @@ namespace Assets.Scripts.Project.View.Hexagon
 
         private void BuildAnimationResume()
         {
-            transform.position = _pos + Vector3.up * (Info.GridHeight+5) * Info.Height;
+            transform.position = _pos + Vector3.up * (Info.GridHeight+5) * Info.HexHeight;
             gameObject.SetActive(true);
 
             if(x == Info.GridWidth-1 && y == Info.GridHeight-1)
-                transform.DOMove(_pos, .7f).SetEase(Ease.OutCirc).SetDelay(y * .1f + x * .2f).OnComplete(()=> {
+                transform.DOMove(_pos, 1.5f).SetEase(Ease.InCirc).SetDelay(y * .1f + x * .2f).OnComplete(()=> {
                     dispatcher.Dispatch(HexEvent.BuildAnimationCompleted);
                 });
             else
-                transform.DOMove(_pos, .7f).SetEase(Ease.OutCirc).SetDelay(y * .1f + x * .2f);
+                transform.DOMove(_pos, 1.5f).SetEase(Ease.InCirc).SetDelay(y * .1f + x * .2f);
         }
 
-        public void MatchAnimation()
+        public void Match(int timeDelayX)
+        {
+            MatchFX();
+
+            CheckForFallDown(transform.position.y);
+            //StartCoroutine(SlideDown(y));
+        }
+
+        public void MatchFX()
         {
             //particleFX
-            pool.Return(gameObject);
+            //pool.Return(gameObject);
+            Mesh.gameObject.SetActive(false);
+            isDead = true;
+        }
 
+        public void CheckForFallDown(float y_To_Fall, int no = 0)
+        {
+            if (Neighbors.ContainsKey(HexNeighbor.TopHex))
+            {
+                if (Info.MatchList.Contains(Neighbors[HexNeighbor.TopHex]))
+                {
+                    Neighbors[HexNeighbor.TopHex].MatchFX();
+                    Neighbors[HexNeighbor.TopHex].CheckForFallDown(y_To_Fall);
+                } else
+                    Neighbors[HexNeighbor.TopHex].FallDown(y_To_Fall, no);
+            }
+            else
+                Debug.Log("createNew");    
+        }
+
+        public void FallDown (float y_To_Fall, int no)
+        {
+            var floorDif = ((transform.position.y - y_To_Fall) / Info.HexHeight);
+
+            transform.DOMoveY(y_To_Fall, floorDif * .2f).SetDelay(.1f + no * .1f).SetEase(Ease.InCirc);
+
+            CheckForFallDown((y_To_Fall + Info.HexHeight), no + 1);
         }
 
         /// //////////////////////////////////////////////////////////////
@@ -192,12 +228,14 @@ namespace Assets.Scripts.Project.View.Hexagon
 
         public void OnGetFromPool()
         {
+            isDead = false;
 
         }
 
         public void OnReturnFromPool()
         {
             transform.localScale = Vector3.one;
+            isDead = true;
         }
 
         #endregion

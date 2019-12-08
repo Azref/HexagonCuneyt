@@ -21,11 +21,11 @@ public class RV_GameInfo : SerializedScriptableObject
 
     [ShowInInspector] public const float DistHorizontal = HexagonEdge * 1.5f;
 
-    public float Height { get { return HexagonHeight; } }
+    public float HexHeight { get { return HexagonHeight; } }
 
-    public float Edge { get { return HexagonEdge; } }
+    public float HexEdge { get { return HexagonEdge; } }
 
-    public float DistX { get { return DistHorizontal; } }
+    public float GridDistX { get { return DistHorizontal; } }
 
     public List<Transform> HexList = new List<Transform>();
 

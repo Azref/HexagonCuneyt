@@ -30,7 +30,7 @@ namespace Assets.Scripts.Project.Manager.Selection
             SwipeManager.OnSwipeDetected += OnSwipeDetected;
         }
 
-        internal void Clear()
+        internal void ResetSelection()
         {
             _liner.positionCount = 0;
 
@@ -287,20 +287,20 @@ namespace Assets.Scripts.Project.Manager.Selection
                 ///                           -         -
                 ///                            3 - - - 2
                 ///                                 
-                _liner.SetPosition(0, hexs[0].transform.localPosition + new Vector3(+Info.Edge * .5f, -Info.Height * .5f, 0)); //Corer 2
-                _liner.SetPosition(1, hexs[0].transform.localPosition + new Vector3(-Info.Edge * .5f, -Info.Height * .5f, 0)); //Corer 3
-                _liner.SetPosition(2, hexs[0].transform.localPosition + new Vector3(-Info.Edge, 0, 0));                           //Corer 4
-                _liner.SetPosition(3, hexs[0].transform.localPosition + new Vector3(-Info.Edge * .5f, +Info.Height * .5f, 0)); //Corer 5
+                _liner.SetPosition(0, hexs[0].transform.localPosition + new Vector3(+Info.HexEdge * .5f, -Info.HexHeight * .5f, 0)); //Corer 2
+                _liner.SetPosition(1, hexs[0].transform.localPosition + new Vector3(-Info.HexEdge * .5f, -Info.HexHeight * .5f, 0)); //Corer 3
+                _liner.SetPosition(2, hexs[0].transform.localPosition + new Vector3(-Info.HexEdge, 0, 0));                           //Corer 4
+                _liner.SetPosition(3, hexs[0].transform.localPosition + new Vector3(-Info.HexEdge * .5f, +Info.HexHeight * .5f, 0)); //Corer 5
 
-                _liner.SetPosition(4, hexs[1].transform.localPosition + new Vector3(-Info.Edge, 0, 0));                           //Corer 4
-                _liner.SetPosition(5, hexs[1].transform.localPosition + new Vector3(-Info.Edge * .5f, +Info.Height * .5f, 0)); //Corer 5
-                _liner.SetPosition(6, hexs[1].transform.localPosition + new Vector3(+Info.Edge * .5f, +Info.Height * .5f, 0)); //Corer 0
-                _liner.SetPosition(7, hexs[1].transform.localPosition + new Vector3(+Info.Edge, 0, 0));                           //Corer 1
+                _liner.SetPosition(4, hexs[1].transform.localPosition + new Vector3(-Info.HexEdge, 0, 0));                           //Corer 4
+                _liner.SetPosition(5, hexs[1].transform.localPosition + new Vector3(-Info.HexEdge * .5f, +Info.HexHeight * .5f, 0)); //Corer 5
+                _liner.SetPosition(6, hexs[1].transform.localPosition + new Vector3(+Info.HexEdge * .5f, +Info.HexHeight * .5f, 0)); //Corer 0
+                _liner.SetPosition(7, hexs[1].transform.localPosition + new Vector3(+Info.HexEdge, 0, 0));                           //Corer 1
 
-                _liner.SetPosition(8, hexs[2].transform.localPosition + new Vector3(+Info.Edge * .5f, +Info.Height * .5f, 0)); //Corer 0
-                _liner.SetPosition(9, hexs[2].transform.localPosition + new Vector3(+Info.Edge, 0, 0));                           //Corer 1
-                _liner.SetPosition(10, hexs[2].transform.localPosition + new Vector3(+Info.Edge * .5f, -Info.Height * .5f, 0)); //Corer 2
-                _liner.SetPosition(11, hexs[2].transform.localPosition + new Vector3(-Info.Edge * .5f, -Info.Height * .5f, 0)); //Corer 3
+                _liner.SetPosition(8, hexs[2].transform.localPosition + new Vector3(+Info.HexEdge * .5f, +Info.HexHeight * .5f, 0)); //Corer 0
+                _liner.SetPosition(9, hexs[2].transform.localPosition + new Vector3(+Info.HexEdge, 0, 0));                           //Corer 1
+                _liner.SetPosition(10, hexs[2].transform.localPosition + new Vector3(+Info.HexEdge * .5f, -Info.HexHeight * .5f, 0)); //Corer 2
+                _liner.SetPosition(11, hexs[2].transform.localPosition + new Vector3(-Info.HexEdge * .5f, -Info.HexHeight * .5f, 0)); //Corer 3
             }
             else
             {
@@ -321,20 +321,20 @@ namespace Assets.Scripts.Project.Manager.Selection
                 ///            -         -
                 ///             3 - - - 2
                 ///  
-                _liner.SetPosition(0, hexs[0].transform.localPosition + new Vector3(-Info.Edge * .5f, +Info.Height * .5f, 0)); //Corer 5
-                _liner.SetPosition(1, hexs[0].transform.localPosition + new Vector3(+Info.Edge * .5f, +Info.Height * .5f, 0)); //Corer 0
-                _liner.SetPosition(2, hexs[0].transform.localPosition + new Vector3(+Info.Edge, 0, 0));                           //Corer 1
-                _liner.SetPosition(3, hexs[0].transform.localPosition + new Vector3(+Info.Edge * .5f, -Info.Height * .5f, 0)); //Corer 2
+                _liner.SetPosition(0, hexs[0].transform.localPosition + new Vector3(-Info.HexEdge * .5f, +Info.HexHeight * .5f, 0)); //Corer 5
+                _liner.SetPosition(1, hexs[0].transform.localPosition + new Vector3(+Info.HexEdge * .5f, +Info.HexHeight * .5f, 0)); //Corer 0
+                _liner.SetPosition(2, hexs[0].transform.localPosition + new Vector3(+Info.HexEdge, 0, 0));                           //Corer 1
+                _liner.SetPosition(3, hexs[0].transform.localPosition + new Vector3(+Info.HexEdge * .5f, -Info.HexHeight * .5f, 0)); //Corer 2
 
-                _liner.SetPosition(4, hexs[1].transform.localPosition + new Vector3(+Info.Edge, 0, 0));                           //Corer 1
-                _liner.SetPosition(5, hexs[1].transform.localPosition + new Vector3(+Info.Edge * .5f, -Info.Height * .5f, 0)); //Corer 2
-                _liner.SetPosition(6, hexs[1].transform.localPosition + new Vector3(-Info.Edge * .5f, -Info.Height * .5f, 0)); //Corer 3
-                _liner.SetPosition(7, hexs[1].transform.localPosition + new Vector3(-Info.Edge, 0, 0));                           //Corer 4
+                _liner.SetPosition(4, hexs[1].transform.localPosition + new Vector3(+Info.HexEdge, 0, 0));                           //Corer 1
+                _liner.SetPosition(5, hexs[1].transform.localPosition + new Vector3(+Info.HexEdge * .5f, -Info.HexHeight * .5f, 0)); //Corer 2
+                _liner.SetPosition(6, hexs[1].transform.localPosition + new Vector3(-Info.HexEdge * .5f, -Info.HexHeight * .5f, 0)); //Corer 3
+                _liner.SetPosition(7, hexs[1].transform.localPosition + new Vector3(-Info.HexEdge, 0, 0));                           //Corer 4
 
-                _liner.SetPosition(8, hexs[2].transform.localPosition + new Vector3(-Info.Edge * .5f, -Info.Height * .5f, 0)); //Corer 3
-                _liner.SetPosition(9, hexs[2].transform.localPosition + new Vector3(-Info.Edge, 0, 0));                           //Corer 4
-                _liner.SetPosition(10, hexs[2].transform.localPosition + new Vector3(-Info.Edge * .5f, +Info.Height * .5f, 0)); //Corer 5
-                _liner.SetPosition(11, hexs[2].transform.localPosition + new Vector3(+Info.Edge * .5f, +Info.Height * .5f, 0)); //Corer 0
+                _liner.SetPosition(8, hexs[2].transform.localPosition + new Vector3(-Info.HexEdge * .5f, -Info.HexHeight * .5f, 0)); //Corer 3
+                _liner.SetPosition(9, hexs[2].transform.localPosition + new Vector3(-Info.HexEdge, 0, 0));                           //Corer 4
+                _liner.SetPosition(10, hexs[2].transform.localPosition + new Vector3(-Info.HexEdge * .5f, +Info.HexHeight * .5f, 0)); //Corer 5
+                _liner.SetPosition(11, hexs[2].transform.localPosition + new Vector3(+Info.HexEdge * .5f, +Info.HexHeight * .5f, 0)); //Corer 0
 
             }
 

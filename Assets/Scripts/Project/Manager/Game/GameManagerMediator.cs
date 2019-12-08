@@ -12,7 +12,7 @@ namespace Assets.Scripts.Project.Manager.Game
     {
         GridReady,
         MakeSelection,
-        WeGotMatchs,
+        ClearSelectionLines,
         NoMatch
     }
 
@@ -34,7 +34,7 @@ namespace Assets.Scripts.Project.Manager.Game
 
             dispatcher.AddListener(GameEvent.CheckSelectionMatch, OnCheckSelectionMatch);
 
-			view.dispatcher.AddListener(GameManagerEvent.WeGotMatchs, OnWeGotMatchs);
+			view.dispatcher.AddListener(GameManagerEvent.ClearSelectionLines, OnWeGotMatchs);
 
 			view.dispatcher.AddListener(GameManagerEvent.NoMatch, OnNoMatch);
         }
@@ -64,7 +64,7 @@ namespace Assets.Scripts.Project.Manager.Game
 
         private void OnWeGotMatchs(IEvent payload)
         {
-            dispatcher.Dispatch(GameEvent.WeGotMatchs);
+            dispatcher.Dispatch(GameEvent.ResetSelection);
         }
 
         private void OnNoMatch(IEvent payload)
@@ -82,7 +82,7 @@ namespace Assets.Scripts.Project.Manager.Game
 
             dispatcher.RemoveListener(GameEvent.CheckSelectionMatch, OnCheckSelectionMatch);
 
-            view.dispatcher.RemoveListener(GameManagerEvent.WeGotMatchs, OnWeGotMatchs);
+            view.dispatcher.RemoveListener(GameManagerEvent.ClearSelectionLines, OnWeGotMatchs);
 
             view.dispatcher.RemoveListener(GameManagerEvent.NoMatch, OnNoMatch);
         }

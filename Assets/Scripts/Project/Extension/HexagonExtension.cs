@@ -59,6 +59,20 @@ namespace Assets.Scripts.Project.Extension
 
         }
 
+        public static List<HexView> FindBottomHexes(this List<HexView> list)
+        {
+            List<HexView> FxList = new List<HexView>();
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].Neighbors.ContainsKey(HexNeighbor.BotHex) &&
+                    list.Contains(list[i].Neighbors[HexNeighbor.BotHex]))
+                    continue;
+
+                FxList.Add(list[i]);
+            }
+            return FxList;
+        }
     }
 
 }

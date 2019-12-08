@@ -6,6 +6,8 @@ using Assets.Scripts.Project.View.Hexagon;
 using Assets.Scripts.Core.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Assets.Scripts.Project.Extension;
 
 namespace Assets.Scripts.Project.Manager.Game
 {
@@ -114,14 +116,14 @@ namespace Assets.Scripts.Project.Manager.Game
 
                 string param = hex.x.ToString() + "-" + hex.y.ToString() + "/" + cornerId.ToString();
 
-                ClearSelectedHexes();
+                SetParentSelectedHexes();
 
                 dispatcher.Dispatch(GameManagerEvent.MakeSelection, param);
 
             }
         }
 
-        private void ClearSelectedHexes()
+        private void SetParentSelectedHexes()
         {
             if (Info.SelectedHexs.Count > 0)
             {
@@ -134,6 +136,8 @@ namespace Assets.Scripts.Project.Manager.Game
                 if (Info.SelectedHexs[2] != null)
                     Info.SelectedHexs[2].transform.SetParent(transform);
             }
+
+            Info.SelectedHexs.Clear();
 
             Status.value &= ~GameStatus.SelectedHexes;
         }
@@ -196,19 +200,26 @@ namespace Assets.Scripts.Project.Manager.Game
         {
             Debug.Log("WE GOT METCHES !!!!!!");
 
-            ClearSelectedHexes();
+            SetParentSelectedHexes();
 
-            dispatcher.Dispatch(GameManagerEvent.WeGotMatchs);
+            dispatcher.Dispatch(GameManagerEvent.ClearSelectionLines);
 
             Status.value |= GameStatus.MatchAnimation;
 
             Status.value |= GameStatus.Blocked;
 
-            for (int i = 0; i < Info.SelectedHexs.Count; i++)
+            List<HexView> BotHexes = Info.MatchList.FindBottomHexes();
+
+            BotHexes.Sort((hex1, hex2) => hex1.x.CompareTo(hex2.x));
+
+            //Info.MatchList.Sort((hex1, hex2) => (hex1.y * 100 - hex1.x).CompareTo(hex2.y * 100 - hex2.x));
+
+            for (int i = 0; i < BotHexes.Count; i++)
             {
-                //Info.SelectedHexs[i].MatchAnimation();
+                BotHexes[i].Match(i);
             }
 
         }
+
     }
 }

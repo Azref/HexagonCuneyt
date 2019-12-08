@@ -24,7 +24,7 @@ namespace Assets.Scripts.Project.Manager.Selection
 
             dispatcher.AddListener(GameEvent.NoMatcheRotateAgain, OnNoMatcheRotateAgain);
 
-            dispatcher.AddListener(GameEvent.WeGotMatchs, OnWeGotMatch);
+            dispatcher.AddListener(GameEvent.ResetSelection, OnResetSelection);
         }
 
         private void OnRotComplete(IEvent payload)
@@ -42,9 +42,9 @@ namespace Assets.Scripts.Project.Manager.Selection
             view.MakeRotation();
         }
 
-        private void OnWeGotMatch(IEvent payload)
+        private void OnResetSelection(IEvent payload)
         {
-            view.Clear();
+            view.ResetSelection();
         }
 
         public override void OnRemove()
@@ -55,7 +55,7 @@ namespace Assets.Scripts.Project.Manager.Selection
 
             dispatcher.RemoveListener(GameEvent.NoMatcheRotateAgain, OnNoMatcheRotateAgain);
 
-            dispatcher.AddListener(GameEvent.WeGotMatchs, OnWeGotMatch);
+            dispatcher.AddListener(GameEvent.ResetSelection, OnResetSelection);
         }
     }
 }

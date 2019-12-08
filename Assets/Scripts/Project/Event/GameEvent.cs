@@ -7,6 +7,6 @@
         MakeSelection,
         CheckSelectionMatch,
         NoMatcheRotateAgain,
-        WeGotMatchs
+        ResetSelection
     }
 }
