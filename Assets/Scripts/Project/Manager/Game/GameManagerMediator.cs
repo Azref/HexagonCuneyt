@@ -11,7 +11,9 @@ namespace Assets.Scripts.Project.Manager.Game
     public enum GameManagerEvent
     {
         GridReady,
-        MakeSelection
+        MakeSelection,
+        WeGotMatchs,
+        NoMatch
     }
 
     public class GameManagerMediator : EventMediator
@@ -24,18 +26,29 @@ namespace Assets.Scripts.Project.Manager.Game
 
         public override void OnRegister()
         {
+            dispatcher.AddListener(GameEvent.BuildGrid, OnBuildGrid);
+
 			view.dispatcher.AddListener(GameManagerEvent.GridReady,OnGridReady);
 
 			view.dispatcher.AddListener(GameManagerEvent.MakeSelection, OnMakeSelection);
 
-            dispatcher.AddListener(GameEvent.BuildGrid, OnBuildGrid);
-
             dispatcher.AddListener(GameEvent.CheckSelectionMatch, OnCheckSelectionMatch);
+
+			view.dispatcher.AddListener(GameManagerEvent.WeGotMatchs, OnWeGotMatchs);
+
+			view.dispatcher.AddListener(GameManagerEvent.NoMatch, OnNoMatch);
+        }
+
+        private void OnBuildGrid(IEvent payload)
+        {
+            poolModel.Pool(PoolKey.Hexagon.ToString(), view.HexPrefab, Game.Info.GridWidth * Game.Info.GridHeight + 5);
+
+            view.BuildGrid();
         }
 
         public void OnGridReady()
 		{
-            Game.Status.value |= Core.Enums.GameStatus.GameIsPlaying;
+            //Game.Status.value |= Core.Enums.GameStatus.GameIsPlaying;
             dispatcher.Dispatch(GameEvent.FixCamera);
         }
 
@@ -44,27 +57,34 @@ namespace Assets.Scripts.Project.Manager.Game
             dispatcher.Dispatch(GameEvent.MakeSelection, (string)payload.data);
         }
 
-        private void OnBuildGrid(IEvent payload)
-        {
-            poolModel.Pool(PoolKey.Hexagon.ToString(), view.HexPrefab, Game.Grid.width * Game.Grid.height + 5);
-
-            view.BuildGrid();
-        }
-
         private void OnCheckSelectionMatch(IEvent payload)
         {
             view.CheckSelectionMatch();
         }
 
+        private void OnWeGotMatchs(IEvent payload)
+        {
+            dispatcher.Dispatch(GameEvent.WeGotMatchs);
+        }
+
+        private void OnNoMatch(IEvent payload)
+        {
+            dispatcher.Dispatch(GameEvent.NoMatcheRotateAgain);
+        }
+
         public override void OnRemove()
         {
+            dispatcher.RemoveListener(GameEvent.BuildGrid, OnBuildGrid);
+
 			view.dispatcher.RemoveListener(GameManagerEvent.GridReady,OnGridReady);
 
             view.dispatcher.RemoveListener(GameManagerEvent.MakeSelection, OnMakeSelection);
 
-            dispatcher.RemoveListener(GameEvent.BuildGrid, OnBuildGrid);
-
             dispatcher.RemoveListener(GameEvent.CheckSelectionMatch, OnCheckSelectionMatch);
+
+            view.dispatcher.RemoveListener(GameManagerEvent.WeGotMatchs, OnWeGotMatchs);
+
+            view.dispatcher.RemoveListener(GameManagerEvent.NoMatch, OnNoMatch);
         }
     }
 }

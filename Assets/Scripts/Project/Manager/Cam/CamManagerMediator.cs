@@ -28,7 +28,6 @@ namespace Assets.Scripts.Project.View.Cam
         private void OnFixCamera(IEvent payload)
         {
             view.FixCam();
-            Debug.Log("CamManagerMediator / OnFixCamera");
         }
 
         public void OnPress(IEvent payload)

@@ -21,6 +21,10 @@ namespace Assets.Scripts.Project.Manager.Selection
             view.dispatcher.AddListener(SelectionManagerEvent.RotComplete, OnRotComplete);
 
             dispatcher.AddListener(GameEvent.MakeSelection, OnMakeSelection);
+
+            dispatcher.AddListener(GameEvent.NoMatcheRotateAgain, OnNoMatcheRotateAgain);
+
+            dispatcher.AddListener(GameEvent.WeGotMatchs, OnWeGotMatch);
         }
 
         private void OnRotComplete(IEvent payload)
@@ -33,11 +37,25 @@ namespace Assets.Scripts.Project.Manager.Selection
             view.SelectHex((string)payload.data);
         }
 
+        private void OnNoMatcheRotateAgain(IEvent payload)
+        {
+            view.MakeRotation();
+        }
+
+        private void OnWeGotMatch(IEvent payload)
+        {
+            view.Clear();
+        }
+
         public override void OnRemove()
         {
             view.dispatcher.RemoveListener(SelectionManagerEvent.RotComplete, OnRotComplete);
 
             dispatcher.RemoveListener(GameEvent.MakeSelection, OnMakeSelection);
+
+            dispatcher.RemoveListener(GameEvent.NoMatcheRotateAgain, OnNoMatcheRotateAgain);
+
+            dispatcher.AddListener(GameEvent.WeGotMatchs, OnWeGotMatch);
         }
     }
 }

@@ -5,6 +5,8 @@
         BuildGrid,
         FixCamera,
         MakeSelection,
-        CheckSelectionMatch
+        CheckSelectionMatch,
+        NoMatcheRotateAgain,
+        WeGotMatchs
     }
 }

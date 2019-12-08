@@ -303,8 +303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Status: {fileID: 11400000, guid: af4d5e53ba38aa4488223d93c83c301e, type: 2}
-  HexInfo: {fileID: 11400000, guid: 3ec0546d211f36c47bc7199561c7bbdd, type: 2}
-  Grid: {fileID: 11400000, guid: 1918b669e5bd6244ab9cf068867ee6b1, type: 2}
+  Info: {fileID: 11400000, guid: 3ec0546d211f36c47bc7199561c7bbdd, type: 2}
 --- !u!114 &1776592956150113847
 MonoBehaviour:
   m_ObjectHideFlags: 0

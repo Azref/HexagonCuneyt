@@ -5,6 +5,7 @@ using Assets.Scripts.Project.Enums;
 using Assets.Scripts.Project.View.Hexagon;
 using Assets.Scripts.Core.Enums;
 using System;
+using System.Collections.Generic;
 
 namespace Assets.Scripts.Project.Manager.Game
 {
@@ -16,29 +17,20 @@ namespace Assets.Scripts.Project.Manager.Game
 
         public RV_GameStatus Status;
 
-        public RV_Grid Grid;
+        public RV_GameInfo Info;
 
-        public RV_Hexagon Hex;
-
-        private Vector3 _donwPos;
-
-        protected override void Start()
-        {
-            base.Start();
-
-            //BuildGrid();
-        }
+        private Vector3 _downPos;
 
         /// //////////////////////////////////////////////////////////////
         /// <summary>//////////////// BuildGrid ////////////////</summary>
         /// //////////////////////////////////////////////////////////////
         public void BuildGrid()
         {
-            Debug.Log("GridManager building...");
+            //Debug.Log("GridManager building...");
             
-            for (int gx = 0; gx < Grid.width; gx++)
+            for (int gx = 0; gx < Info.GridWidth; gx++)
             {
-                for (int gy = 0; gy < Grid.height; gy++)
+                for (int gy = 0; gy < Info.GridHeight; gy++)
                 {
                     var hex = pool.Get(PoolKey.Hexagon.ToString()).GetComponent<HexView>();
 
@@ -46,18 +38,14 @@ namespace Assets.Scripts.Project.Manager.Game
 
                     string key = gx + "-" + gy;
 
-                    Grid.HexDict.Add(key, hex);
+                    Info.HexDict.Add(key, hex);
 
-                    Grid.HexList.Add(hex.transform);
+                    Info.HexList.Add(hex.transform);
 
                     hex.Setup(gx, gy);
-
-                    hex.BuildAnimation();
                 }
             }
-
 			dispatcher.Dispatch(GameManagerEvent.GridReady);
-
         }
 
         /// //////////////////////////////////////////////////////////////
@@ -71,18 +59,18 @@ namespace Assets.Scripts.Project.Manager.Game
 
         private bool CheckTouch()
         {
-            if (Status.value.HasFlag(GameStatus.Blocked | GameStatus.HexIsRotating) || !Status.value.HasFlag(GameStatus.GameIsPlaying))
+            if (Status.value.HasFlag(GameStatus.Blocked) || Status.value.HasFlag(GameStatus.HexIsRotating) || !Status.value.HasFlag(GameStatus.GameIsPlaying))
                 return false;
 
             if (Input.GetMouseButtonDown(0))
             {
-                _donwPos = Input.mousePosition;
+                _downPos = Input.mousePosition;
 
                 return false;
             }
             else if (Input.GetMouseButtonUp(0))
             {
-                var dist = Vector3.Distance(_donwPos, Input.mousePosition);
+                var dist = Vector3.Distance(_downPos, Input.mousePosition);
 
                 return dist < 10;
             }
@@ -124,31 +112,103 @@ namespace Assets.Scripts.Project.Manager.Game
                 //Debug.Log("Aim              : " + Aim);
                 //Debug.Log("CornerId         : " + CornerId);
 
-                string param = hex.x.ToString() + "-" + hex.y.ToString() + "/" +  cornerId.ToString();
+                string param = hex.x.ToString() + "-" + hex.y.ToString() + "/" + cornerId.ToString();
 
-                if (Hex.SelectedHexs.Count > 0)
-                {
-                    if (Hex.SelectedHexs[0] != null)
-                    Hex.SelectedHexs[0].transform.SetParent(transform);
-
-                    if (Hex.SelectedHexs[1] != null)
-                        Hex.SelectedHexs[1].transform.SetParent(transform);
-
-                    if (Hex.SelectedHexs[2] != null)
-                        Hex.SelectedHexs[2].transform.SetParent(transform);
-                }
+                ClearSelectedHexes();
 
                 dispatcher.Dispatch(GameManagerEvent.MakeSelection, param);
+
             }
         }
 
-        /// //////////////////////////////////////////////////////////////
-        /// ////////////////// Check Selection Match /////////////////////
-        /// //////////////////////////////////////////////////////////////
+        private void ClearSelectedHexes()
+        {
+            if (Info.SelectedHexs.Count > 0)
+            {
+                if (Info.SelectedHexs[0] != null)
+                    Info.SelectedHexs[0].transform.SetParent(transform);
 
+                if (Info.SelectedHexs[1] != null)
+                    Info.SelectedHexs[1].transform.SetParent(transform);
+
+                if (Info.SelectedHexs[2] != null)
+                    Info.SelectedHexs[2].transform.SetParent(transform);
+            }
+
+            Status.value &= ~GameStatus.SelectedHexes;
+        }
+
+        /// //////////////////////////////////////////////////////////////
+        /// ///////////////////// !!! MATCHING !!! ///////////////////////
+        /// //////////////////////////////////////////////////////////////
         internal void CheckSelectionMatch()
         {
-            
+            Info.MatchList = new List<HexView>();
+
+            for (int i = 0; i < Info.SelectedHexs.Count; i++)
+                CheckHexMatch(Info.SelectedHexs[i]);
+
+            if (Info.MatchList.Count == 0)
+                dispatcher.Dispatch(GameManagerEvent.NoMatch);
+            else
+                MatchAnimation();
+        }
+
+        private bool CheckHexMatch(HexView hex1, bool justForCheck = false)
+        {
+            //Debug.Log("Checking for " + hex1.name);
+
+            for (int i = 0; i < 6; i++)
+            {
+                HexView hex2 = hex1.Neighbors.ContainsKey((HexNeighbor)i) ? hex1.Neighbors[(HexNeighbor)i] : null;
+                HexView hex3 = hex1.Neighbors.ContainsKey((HexNeighbor)((i + 1) % 6)) ? hex1.Neighbors[(HexNeighbor)((i + 1) % 6)] : null;
+
+                if (hex2 != null && hex3 != null && hex1.color == hex2.color && hex1.color == hex3.color)
+                {
+                    if (justForCheck)
+                        return true;
+
+                    if (!Info.MatchList.Contains(hex1))
+                        Info.MatchList.Add(hex1);
+
+                    if (!Info.MatchList.Contains(hex2))
+                    {
+                        Info.MatchList.Add(hex2);
+                        CheckHexMatch(hex2);
+                    }
+
+                    if (!Info.MatchList.Contains(hex3))
+                    {
+                        Info.MatchList.Add(hex3);
+                        CheckHexMatch(hex3);
+                    }
+
+                }
+
+            }
+            return false;
+        }
+
+        /// //////////////////////////////////////////////////////////////
+        /// ////////////////// !!! Match Animation !!! ///////////////////
+        /// //////////////////////////////////////////////////////////////
+        private void MatchAnimation()
+        {
+            Debug.Log("WE GOT METCHES !!!!!!");
+
+            ClearSelectedHexes();
+
+            dispatcher.Dispatch(GameManagerEvent.WeGotMatchs);
+
+            Status.value |= GameStatus.MatchAnimation;
+
+            Status.value |= GameStatus.Blocked;
+
+            for (int i = 0; i < Info.SelectedHexs.Count; i++)
+            {
+                Info.SelectedHexs[i].MatchAnimation();
+            }
+
         }
     }
 }

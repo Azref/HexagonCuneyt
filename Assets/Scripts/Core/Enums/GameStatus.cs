@@ -16,11 +16,12 @@ namespace Assets.Scripts.Core.Enums
         GameIsPlaying = 1 << 3,
         HexIsRotating = 1 << 4,
         SelectedHexes = 1 << 5,
+        MatchAnimation = 1 << 6,
         //Pages = Page1 | Page2 | Page3,
 
-		/*EDITOR-BREAKPOINT*/ 
+        /*EDITOR-BREAKPOINT*/
 
-        All = ~(-1 << 6/*EDITOR-NUMPOINT*/)
+        All = ~(-1 << 7/*EDITOR-NUMPOINT*/),
     }
 
 }

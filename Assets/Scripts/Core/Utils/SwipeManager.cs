@@ -122,9 +122,9 @@ public class SwipeManager : MonoBehaviour
             if (swipeCm < instance.minSwipeLength) {
                 // Swipe was not long enough, abort
                 if (!instance.triggerSwipeAtMinLength) {
-                    if (Application.isEditor) {
-                        Debug.Log("[SwipeManager] Swipe was not long enough.");
-                    }
+                    //if (Application.isEditor) {
+                    //    Debug.Log("[SwipeManager] Swipe was not long enough.");
+                    //}
  
                     swipeDirection = Swipe.None;
                 }

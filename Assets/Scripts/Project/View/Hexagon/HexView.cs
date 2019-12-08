@@ -12,9 +12,7 @@ namespace Assets.Scripts.Project.View.Hexagon
 {
     public class HexView : PoolView, IPoolable
     {
-        public RV_Grid GridInfo;
-
-        public RV_Hexagon HexInfo;
+        public RV_GameInfo Info;
 
         public int color;
 
@@ -57,9 +55,9 @@ namespace Assets.Scripts.Project.View.Hexagon
         /// //////////////////////////////////////////////////////////////
         private void PlaceIt()
         {
-            transform.localPosition = new Vector3(x * HexInfo.DistX, y * HexInfo.Height);
+            transform.localPosition = new Vector3(x * Info.DistX, y * Info.Height);
 
-            if (x % 2 == 1) transform.Translate(0, HexInfo.Height * .5f, 0);
+            if (x % 2 == 1) transform.Translate(0, Info.Height * .5f, 0);
 
             _pos = transform.position;
         }
@@ -69,24 +67,24 @@ namespace Assets.Scripts.Project.View.Hexagon
         /// //////////////////////////////////////////////////////////////
         public void FixNeighbors()
         {
-            GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.TopHex, x + "-" + (y + 1));
-            GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.BotHex, x + "-" + (y - 1));
+            Info.HexDict.CheckAndAssign(this, HexNeighbor.TopHex, x + "-" + (y + 1));
+            Info.HexDict.CheckAndAssign(this, HexNeighbor.BotHex, x + "-" + (y - 1));
 
             if (x % 2 == 0)
             {
-                GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.RTHex, (x + 1) + "-" + y);
-                GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.RBHex, (x + 1) + "-" + (y - 1));
+                Info.HexDict.CheckAndAssign(this, HexNeighbor.RTHex, (x + 1) + "-" + y);
+                Info.HexDict.CheckAndAssign(this, HexNeighbor.RBHex, (x + 1) + "-" + (y - 1));
 
-                GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.LTHex, (x - 1) + "-" + y);
-                GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.LBHex, (x - 1) + "-" + (y - 1));
+                Info.HexDict.CheckAndAssign(this, HexNeighbor.LTHex, (x - 1) + "-" + y);
+                Info.HexDict.CheckAndAssign(this, HexNeighbor.LBHex, (x - 1) + "-" + (y - 1));
             }
             else
             {
-                GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.LTHex, (x - 1) + "-" + (y + 1));
-                GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.LBHex, (x - 1) + "-" + y);
+                Info.HexDict.CheckAndAssign(this, HexNeighbor.LTHex, (x - 1) + "-" + (y + 1));
+                Info.HexDict.CheckAndAssign(this, HexNeighbor.LBHex, (x - 1) + "-" + y);
 
-                GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.RTHex, (x + 1) + "-" + (y + 1));
-                GridInfo.HexDict.CheckAndAssign(this, HexNeighbor.RBHex, (x + 1) + "-" + y);
+                Info.HexDict.CheckAndAssign(this, HexNeighbor.RTHex, (x + 1) + "-" + (y + 1));
+                Info.HexDict.CheckAndAssign(this, HexNeighbor.RBHex, (x + 1) + "-" + y);
             }
         }
 
@@ -98,7 +96,7 @@ namespace Assets.Scripts.Project.View.Hexagon
             if (buildSetup)
             {
                 //color = (HexagonColor)UnityEngine.Random.Range(1, Enum.GetValues(typeof(HexagonColor)).Length);
-                color = UnityEngine.Random.Range(1, HexInfo.Colors.Count);
+                color = UnityEngine.Random.Range(1, Info.HexColors.Count);
 
                 if (CheckColorMatchForBuildSetup())
                 {
@@ -109,7 +107,7 @@ namespace Assets.Scripts.Project.View.Hexagon
             else
                 color = specificColor;
 
-            GetComponent<SpriteRenderer>().color = HexInfo.Colors[color];
+            GetComponent<SpriteRenderer>().color = Info.HexColors[color];
         }
 
         private bool CheckColorMatchForBuildSetup()
@@ -141,19 +139,33 @@ namespace Assets.Scripts.Project.View.Hexagon
         /// //////////////////////////////////////////////////////////////
         /// <summary>//////////////// Animate //////////////////</summary>
         /// //////////////////////////////////////////////////////////////
-        internal void BuildAnimation()
+        public void BuildAnimation()
         {
             gameObject.SetActive(false);
 
-            Invoke("Animate",.2f);
+            Invoke("BuildAnimationResume", .2f);
         }
 
-        internal void Animate()
+        private void BuildAnimationResume()
         {
-            transform.position = _pos + Vector3.up * (GridInfo.height+5) * HexInfo.Height;
+            transform.position = _pos + Vector3.up * (Info.GridHeight+5) * Info.Height;
             gameObject.SetActive(true);
-            transform.DOMove(_pos, .7f).SetEase(Ease.OutCirc).SetDelay(y * .1f + x * .2f);
+
+            if(x == Info.GridWidth-1 && y == Info.GridHeight-1)
+                transform.DOMove(_pos, .7f).SetEase(Ease.OutCirc).SetDelay(y * .1f + x * .2f).OnComplete(()=> {
+                    dispatcher.Dispatch(HexEvent.BuildAnimationCompleted);
+                });
+            else
+                transform.DOMove(_pos, .7f).SetEase(Ease.OutCirc).SetDelay(y * .1f + x * .2f);
         }
+
+        public void MatchAnimation()
+        {
+            //particleFX
+            gameObject.SetActive(false);
+
+        }
+
         /// //////////////////////////////////////////////////////////////
         /// <summary>////////////////// Pool ///////////////////</summary>
         /// //////////////////////////////////////////////////////////////
@@ -169,6 +181,7 @@ namespace Assets.Scripts.Project.View.Hexagon
         {
             transform.localScale = Vector3.one;
         }
+
         #endregion
     }
 }

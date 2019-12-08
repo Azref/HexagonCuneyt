@@ -4,9 +4,7 @@ namespace Assets.Scripts.Core.Model.Game
     {
         RV_GameStatus Status { get; }
 
-        RV_Hexagon Hexagon { get; }
-
-        RV_Grid Grid { get; }
+        RV_GameInfo Info { get; }
 
         void Clear();
     }

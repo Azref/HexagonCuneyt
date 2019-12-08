@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2936a1f5a66950e41be1c0cd927d29fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Grid: {fileID: 11400000, guid: 1918b669e5bd6244ab9cf068867ee6b1, type: 2}
+  Info: {fileID: 11400000, guid: 3ec0546d211f36c47bc7199561c7bbdd, type: 2}
   offset: {x: 0, y: 0, z: -100}
   smoothTime: 0.5
   _cam: {fileID: 3935769189086583432}

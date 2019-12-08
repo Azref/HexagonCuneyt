@@ -1,0 +1,277 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!181963792 &2655988077585873504
+Preset:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: HexagonInfo_Backup
+  m_TargetType:
+    m_NativeTypeID: 114
+    m_ManagedTypePPtr: {fileID: 11500000, guid: 88592bf9b16831746bedd48d79bd3dcc,
+      type: 3}
+    m_ManagedTypeFallback: 
+  m_Properties:
+  - target: {fileID: 0}
+    propertyPath: m_Enabled
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorHideFlags
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorClassIdentifier
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializedFormat
+    value: 2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializedBytes.Array.size
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.ReferencedUnityObjects.Array.size
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializedBytesString
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.Prefab
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.PrefabModificationsReferencedUnityObjects.Array.size
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.PrefabModifications.Array.size
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.size
+    value: 6
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.data[0].Name
+    value: HexDict
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.data[0].Entry
+    value: 7
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.data[0].Data
+    value: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Assets.Scripts.Project.View.Hexagon.HexView,
+      Assembly-CSharp]], mscorlib
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.data[1].Name
+    value: comparer
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.data[1].Entry
+    value: 7
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.data[1].Data
+    value: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+      mscorlib]], mscorlib
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.data[2].Name
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.data[2].Entry
+    value: 8
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.data[2].Data
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.data[3].Name
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.data[3].Entry
+    value: 12
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.data[3].Data
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.data[4].Name
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.data[4].Entry
+    value: 13
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.data[4].Data
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.data[5].Name
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.data[5].Entry
+    value: 8
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: serializationData.SerializationNodes.Array.data[5].Data
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: GridWidth
+    value: 8
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: Gridheight
+    value: 9
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.size
+    value: 7
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[0].r
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[0].g
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[0].b
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[0].a
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[1].r
+    value: 0.87843144
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[1].g
+    value: 0.28627452
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[1].b
+    value: 0.21960786
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[1].a
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[2].r
+    value: 0.16862746
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[2].g
+    value: 0.7725491
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[2].b
+    value: 0.427451
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[2].a
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[3].r
+    value: 0.2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[3].g
+    value: 0.58431375
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[3].b
+    value: 0.83921576
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[3].a
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[4].r
+    value: 0.878
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[4].g
+    value: 0.48235
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[4].b
+    value: 0.129
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[4].a
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[5].r
+    value: 0.592156
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[5].g
+    value: 0.34117648
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[5].b
+    value: 0.698039
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[5].a
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[6].r
+    value: 0.92549
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[6].g
+    value: 0.74902
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[6].b
+    value: 0.055
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexColors.Array.data[6].a
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HexList.Array.size
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: SelectedHexs.Array.size
+    value: 3
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: SelectedHexs.Array.data[0]
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: SelectedHexs.Array.data[1]
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: SelectedHexs.Array.data[2]
+    value: 
+    objectReference: {fileID: 0}

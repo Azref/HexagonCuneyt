@@ -6,18 +6,16 @@ namespace Assets.Scripts.Core.Model.Game
     {
         private RV_GameStatus _status;
 
-        private RV_Hexagon _hexagon;
-
-        private RV_Grid _grid;
+        private RV_GameInfo _info;
 
         [PostConstruct]
         public void OnPostConstruct()
         {
             _status = Resources.Load<RV_GameStatus>("RuntimeVariables/GameStatus");
-            _hexagon = Resources.Load<RV_Hexagon>("RuntimeVariables/HexagonInfo");
-            _grid = Resources.Load<RV_Grid>("RuntimeVariables/GridInfo");
-            _grid.HexDict.Clear();
-            _grid.HexList.Clear();
+            _info = Resources.Load<RV_GameInfo>("RuntimeVariables/GameInfo");
+            _info.HexDict.Clear();
+            _info.HexList.Clear();
+            _info.SelectedHexs.Clear();
         }
 
         public RV_GameStatus Status
@@ -31,32 +29,22 @@ namespace Assets.Scripts.Core.Model.Game
             }
         }
 
-        public RV_Hexagon Hexagon
+        public RV_GameInfo Info
         {
             get
             {
-                if (_hexagon == null)
+                if (_info == null)
                     OnPostConstruct();
 
-                return _hexagon;
-            }
-        }
-
-        public RV_Grid Grid
-        {
-            get
-            {
-                if (_grid == null)
-                    OnPostConstruct();
-
-                return _grid;
+                return _info;
             }
         }
 
         public void Clear()
         {
-            _grid.HexDict.Clear();
-            _grid.HexList.Clear();
+            _info.HexDict.Clear();
+            _info.HexList.Clear();
+            _info.SelectedHexs.Clear();
         }
     }
 }

@@ -13,9 +13,7 @@ namespace Assets.Scripts.Project.Manager.Selection
     {
         public RV_GameStatus Status;
 
-        public RV_Hexagon HexInfo;
-
-        public RV_Grid Grid;
+        public RV_GameInfo Info;
 
         private LineRenderer _liner;
 
@@ -23,69 +21,86 @@ namespace Assets.Scripts.Project.Manager.Selection
 
         private bool _cw = true;
 
+        private HexView _tempHex;
+
         protected override void Start()
         {
             base.Start();
 
             _liner = GetComponent<LineRenderer>();
 
+            _tempHex = new GameObject().AddComponent<HexView>();
+
             SwipeManager.OnSwipeDetected += OnSwipeDetected;
         }
 
-        /// //////////////////////////////////////////////////////////////
-        /// /////////////////////////// SWIPE ////////////////////////////
-        /// //////////////////////////////////////////////////////////////
-        void OnSwipeDetected(Swipe direction, Vector2 swipeVelocity, Vector2 firstPressPos, Vector2 secondPressPos)
+        internal void Clear()
         {
-            var center = Camera.main.WorldToScreenPoint(transform.position);
+            _liner.positionCount = 0;
 
-            _cw = Vector3.Cross((Vector3)secondPressPos - (Vector3)firstPressPos, center - (Vector3)firstPressPos).z < 0 ? true : false;
-
-            MakeRotation();
+            transform.position = new Vector3(-100, 0, 0);
         }
 
-        private void MakeRotation()
+        /// //////////////////////////////////////////////////////////////
+        /// //////////////////////// SWIPE INPUT /////////////////////////
+        /// //////////////////////////////////////////////////////////////
+        private void OnSwipeDetected(Swipe direction, Vector2 swipeVelocity, Vector2 firstPressPos, Vector2 secondPressPos)
         {
-
-            Debug.Log(Status.value.HasFlag(GameStatus.HexIsRotating));
             if (!Status.value.HasFlag(GameStatus.SelectedHexes))
                 return;
 
             if (Status.value.HasFlag(GameStatus.HexIsRotating))
                 return;
 
+            if (Status.value.HasFlag(GameStatus.Blocked))
+                return;
+
+            var center = Camera.main.WorldToScreenPoint(transform.position);
+
+            _cw = Vector3.Cross((Vector3)secondPressPos - (Vector3)firstPressPos, center - (Vector3)firstPressPos).z < 0 ? true : false;
+
+            _rotCount = 0;
+
+            MakeRotation();
+        }
+
+        /// //////////////////////////////////////////////////////////////
+        /// ////////////////////////// ROTATION //////////////////////////
+        /// //////////////////////////////////////////////////////////////
+        public void MakeRotation()
+        {
             Status.value |= GameStatus.HexIsRotating;
 
             _rotCount++;
 
-            transform.DORotate(new Vector3(0, 0, (_cw ? -1 : 1) * 120), .1f).OnComplete(RotCompleted);
+            transform.DORotate(new Vector3(0, 0, (_cw ? -1 : 1) * 120), .1f).OnComplete(RotCompleted).SetDelay(_rotCount == 1 ? 0 : .1f);
         }
 
         private void RotCompleted()
         {
             transform.localEulerAngles = Vector3.zero;
 
-            HexView tempHex = new HexView()
-            {
-                isBomb = HexInfo.SelectedHexs[0].isBomb,
-                color = HexInfo.SelectedHexs[0].color
-            };
+            _tempHex.isBomb = Info.SelectedHexs[0].isBomb;
+            _tempHex.color = Info.SelectedHexs[0].color;
 
             if (_cw)
             {
-                HexInfo.SelectedHexs[0].Copy(HexInfo.SelectedHexs[2]);
-                HexInfo.SelectedHexs[2].Copy(HexInfo.SelectedHexs[1]);
-                HexInfo.SelectedHexs[1].Copy(tempHex);
+                Info.SelectedHexs[0].Copy(Info.SelectedHexs[2]);
+                Info.SelectedHexs[2].Copy(Info.SelectedHexs[1]);
+                Info.SelectedHexs[1].Copy(_tempHex);
             } else
             {
-                HexInfo.SelectedHexs[0].Copy(HexInfo.SelectedHexs[1]);
-                HexInfo.SelectedHexs[1].Copy(HexInfo.SelectedHexs[2]);
-                HexInfo.SelectedHexs[2].Copy(tempHex);
+                Info.SelectedHexs[0].Copy(Info.SelectedHexs[1]);
+                Info.SelectedHexs[1].Copy(Info.SelectedHexs[2]);
+                Info.SelectedHexs[2].Copy(_tempHex);
             }
 
-            Status.value -= GameStatus.HexIsRotating;
+            Status.value &= ~GameStatus.HexIsRotating;
 
-            dispatcher.Dispatch(SelectionManagerEvent.RotComplete);
+            if (_rotCount == 3)
+                _rotCount = 0;
+            else
+                dispatcher.Dispatch(SelectionManagerEvent.RotComplete);
         }
 
         /// //////////////////////////////////////////////////////////////
@@ -122,7 +137,7 @@ namespace Assets.Scripts.Project.Manager.Selection
             string[] split = val.Split('/');
 
             /// We have a string: touched Hex and closest corner to that touch point. So we need to parse it.
-            HexView hex1 = Grid.HexDict[split[0]];
+            HexView hex1 = Info.HexDict[split[0]];
 
             int cornerId = int.Parse(split[1]);
 
@@ -172,11 +187,11 @@ namespace Assets.Scripts.Project.Manager.Selection
                 return;
             }
             //////////////////////////////////////////////////////////////
-            HexInfo.SelectedHexs.Clear();
+            Info.SelectedHexs.Clear();
 
-            HexInfo.SelectedHexs.Add(hex1);
-            HexInfo.SelectedHexs.Add(hex2);
-            HexInfo.SelectedHexs.Add(hex3);
+            Info.SelectedHexs.Add(hex1);
+            Info.SelectedHexs.Add(hex2);
+            Info.SelectedHexs.Add(hex3);
 
             Status.value |= GameStatus.SelectedHexes;
 
@@ -190,10 +205,10 @@ namespace Assets.Scripts.Project.Manager.Selection
                 if (hex1.y == 0)
                     SelectHex(hex1, 0);
 
-                else if (hex1.y == Grid.height - 1 && cornerId == 4)
+                else if (hex1.y == Info.GridHeight - 1 && cornerId == 4)
                     SelectHex(hex1, 2);
 
-                else if (hex1.y == Grid.height - 1 && cornerId == 0)
+                else if (hex1.y == Info.GridHeight - 1 && cornerId == 0)
                     SelectHex(hex1, 1);
 
                 else if (cornerId == 5)
@@ -202,7 +217,7 @@ namespace Assets.Scripts.Project.Manager.Selection
                 else
                     SelectHex(hex1, 2);
             }
-            else if (hex1.x == Grid.width - 1)
+            else if (hex1.x == Info.GridWidth - 1)
             {
                 if (hex1.y == 0 && cornerId > 1)
                     SelectHex(hex1, cornerId + 1);
@@ -210,13 +225,13 @@ namespace Assets.Scripts.Project.Manager.Selection
                 else if (hex1.y == 0 && cornerId > 1)
                     SelectHex(hex1, cornerId + 1);
 
-                else if (hex1.y == Grid.height - 1 && cornerId == 0)
+                else if (hex1.y == Info.GridHeight - 1 && cornerId == 0)
                     SelectHex(hex1, 5);
 
-                else if (hex1.y == Grid.height - 1 && cornerId < 3)
+                else if (hex1.y == Info.GridHeight - 1 && cornerId < 3)
                     SelectHex(hex1, cornerId + 1);
 
-                else if (hex1.y == Grid.height - 1 && cornerId <= 5)
+                else if (hex1.y == Info.GridHeight - 1 && cornerId <= 5)
                     SelectHex(hex1, cornerId-1);
 
                 else if (cornerId == 0)
@@ -233,7 +248,7 @@ namespace Assets.Scripts.Project.Manager.Selection
                 else 
                     SelectHex(hex1, cornerId + 1);
             }
-            else if (hex1.y == Grid.height - 1)
+            else if (hex1.y == Info.GridHeight - 1)
             {
                 if (cornerId < 2)
                     SelectHex(hex1, cornerId + 1);
@@ -260,7 +275,7 @@ namespace Assets.Scripts.Project.Manager.Selection
         ///
         internal void DrawOtline()
         {
-            var hexs = HexInfo.SelectedHexs;
+            var hexs = Info.SelectedHexs;
             transform.position = new Vector3(
                 (hexs[0].transform.position.x + hexs[1].transform.position.x + hexs[2].transform.position.x) / 3,
                 (hexs[0].transform.position.y + hexs[1].transform.position.y + hexs[2].transform.position.y) / 3,
@@ -290,20 +305,20 @@ namespace Assets.Scripts.Project.Manager.Selection
                 ///                           -         -
                 ///                            3 - - - 2
                 ///                                 
-                _liner.SetPosition(0, hexs[0].transform.localPosition + new Vector3(+HexInfo.Edge * .5f, -HexInfo.Height * .5f, 0)); //Corer 2
-                _liner.SetPosition(1, hexs[0].transform.localPosition + new Vector3(-HexInfo.Edge * .5f, -HexInfo.Height * .5f, 0)); //Corer 3
-                _liner.SetPosition(2, hexs[0].transform.localPosition + new Vector3(-HexInfo.Edge, 0, 0));                           //Corer 4
-                _liner.SetPosition(3, hexs[0].transform.localPosition + new Vector3(-HexInfo.Edge * .5f, +HexInfo.Height * .5f, 0)); //Corer 5
+                _liner.SetPosition(0, hexs[0].transform.localPosition + new Vector3(+Info.Edge * .5f, -Info.Height * .5f, 0)); //Corer 2
+                _liner.SetPosition(1, hexs[0].transform.localPosition + new Vector3(-Info.Edge * .5f, -Info.Height * .5f, 0)); //Corer 3
+                _liner.SetPosition(2, hexs[0].transform.localPosition + new Vector3(-Info.Edge, 0, 0));                           //Corer 4
+                _liner.SetPosition(3, hexs[0].transform.localPosition + new Vector3(-Info.Edge * .5f, +Info.Height * .5f, 0)); //Corer 5
 
-                _liner.SetPosition(4, hexs[1].transform.localPosition + new Vector3(-HexInfo.Edge, 0, 0));                           //Corer 4
-                _liner.SetPosition(5, hexs[1].transform.localPosition + new Vector3(-HexInfo.Edge * .5f, +HexInfo.Height * .5f, 0)); //Corer 5
-                _liner.SetPosition(6, hexs[1].transform.localPosition + new Vector3(+HexInfo.Edge * .5f, +HexInfo.Height * .5f, 0)); //Corer 0
-                _liner.SetPosition(7, hexs[1].transform.localPosition + new Vector3(+HexInfo.Edge, 0, 0));                           //Corer 1
+                _liner.SetPosition(4, hexs[1].transform.localPosition + new Vector3(-Info.Edge, 0, 0));                           //Corer 4
+                _liner.SetPosition(5, hexs[1].transform.localPosition + new Vector3(-Info.Edge * .5f, +Info.Height * .5f, 0)); //Corer 5
+                _liner.SetPosition(6, hexs[1].transform.localPosition + new Vector3(+Info.Edge * .5f, +Info.Height * .5f, 0)); //Corer 0
+                _liner.SetPosition(7, hexs[1].transform.localPosition + new Vector3(+Info.Edge, 0, 0));                           //Corer 1
 
-                _liner.SetPosition(8, hexs[2].transform.localPosition + new Vector3(+HexInfo.Edge * .5f, +HexInfo.Height * .5f, 0)); //Corer 0
-                _liner.SetPosition(9, hexs[2].transform.localPosition + new Vector3(+HexInfo.Edge, 0, 0));                           //Corer 1
-                _liner.SetPosition(10, hexs[2].transform.localPosition + new Vector3(+HexInfo.Edge * .5f, -HexInfo.Height * .5f, 0)); //Corer 2
-                _liner.SetPosition(11, hexs[2].transform.localPosition + new Vector3(-HexInfo.Edge * .5f, -HexInfo.Height * .5f, 0)); //Corer 3
+                _liner.SetPosition(8, hexs[2].transform.localPosition + new Vector3(+Info.Edge * .5f, +Info.Height * .5f, 0)); //Corer 0
+                _liner.SetPosition(9, hexs[2].transform.localPosition + new Vector3(+Info.Edge, 0, 0));                           //Corer 1
+                _liner.SetPosition(10, hexs[2].transform.localPosition + new Vector3(+Info.Edge * .5f, -Info.Height * .5f, 0)); //Corer 2
+                _liner.SetPosition(11, hexs[2].transform.localPosition + new Vector3(-Info.Edge * .5f, -Info.Height * .5f, 0)); //Corer 3
             }
             else
             {
@@ -324,20 +339,20 @@ namespace Assets.Scripts.Project.Manager.Selection
                 ///            -         -
                 ///             3 - - - 2
                 ///  
-                _liner.SetPosition(0, hexs[0].transform.localPosition + new Vector3(-HexInfo.Edge * .5f, +HexInfo.Height * .5f, 0)); //Corer 5
-                _liner.SetPosition(1, hexs[0].transform.localPosition + new Vector3(+HexInfo.Edge * .5f, +HexInfo.Height * .5f, 0)); //Corer 0
-                _liner.SetPosition(2, hexs[0].transform.localPosition + new Vector3(+HexInfo.Edge, 0, 0));                           //Corer 1
-                _liner.SetPosition(3, hexs[0].transform.localPosition + new Vector3(+HexInfo.Edge * .5f, -HexInfo.Height * .5f, 0)); //Corer 2
+                _liner.SetPosition(0, hexs[0].transform.localPosition + new Vector3(-Info.Edge * .5f, +Info.Height * .5f, 0)); //Corer 5
+                _liner.SetPosition(1, hexs[0].transform.localPosition + new Vector3(+Info.Edge * .5f, +Info.Height * .5f, 0)); //Corer 0
+                _liner.SetPosition(2, hexs[0].transform.localPosition + new Vector3(+Info.Edge, 0, 0));                           //Corer 1
+                _liner.SetPosition(3, hexs[0].transform.localPosition + new Vector3(+Info.Edge * .5f, -Info.Height * .5f, 0)); //Corer 2
 
-                _liner.SetPosition(4, hexs[1].transform.localPosition + new Vector3(+HexInfo.Edge, 0, 0));                           //Corer 1
-                _liner.SetPosition(5, hexs[1].transform.localPosition + new Vector3(+HexInfo.Edge * .5f, -HexInfo.Height * .5f, 0)); //Corer 2
-                _liner.SetPosition(6, hexs[1].transform.localPosition + new Vector3(-HexInfo.Edge * .5f, -HexInfo.Height * .5f, 0)); //Corer 3
-                _liner.SetPosition(7, hexs[1].transform.localPosition + new Vector3(-HexInfo.Edge, 0, 0));                           //Corer 4
+                _liner.SetPosition(4, hexs[1].transform.localPosition + new Vector3(+Info.Edge, 0, 0));                           //Corer 1
+                _liner.SetPosition(5, hexs[1].transform.localPosition + new Vector3(+Info.Edge * .5f, -Info.Height * .5f, 0)); //Corer 2
+                _liner.SetPosition(6, hexs[1].transform.localPosition + new Vector3(-Info.Edge * .5f, -Info.Height * .5f, 0)); //Corer 3
+                _liner.SetPosition(7, hexs[1].transform.localPosition + new Vector3(-Info.Edge, 0, 0));                           //Corer 4
 
-                _liner.SetPosition(8, hexs[2].transform.localPosition + new Vector3(-HexInfo.Edge * .5f, -HexInfo.Height * .5f, 0)); //Corer 3
-                _liner.SetPosition(9, hexs[2].transform.localPosition + new Vector3(-HexInfo.Edge, 0, 0));                           //Corer 4
-                _liner.SetPosition(10, hexs[2].transform.localPosition + new Vector3(-HexInfo.Edge * .5f, +HexInfo.Height * .5f, 0)); //Corer 5
-                _liner.SetPosition(11, hexs[2].transform.localPosition + new Vector3(+HexInfo.Edge * .5f, +HexInfo.Height * .5f, 0)); //Corer 0
+                _liner.SetPosition(8, hexs[2].transform.localPosition + new Vector3(-Info.Edge * .5f, -Info.Height * .5f, 0)); //Corer 3
+                _liner.SetPosition(9, hexs[2].transform.localPosition + new Vector3(-Info.Edge, 0, 0));                           //Corer 4
+                _liner.SetPosition(10, hexs[2].transform.localPosition + new Vector3(-Info.Edge * .5f, +Info.Height * .5f, 0)); //Corer 5
+                _liner.SetPosition(11, hexs[2].transform.localPosition + new Vector3(+Info.Edge * .5f, +Info.Height * .5f, 0)); //Corer 0
 
             }
 

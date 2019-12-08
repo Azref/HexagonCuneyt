@@ -7,7 +7,7 @@ namespace Assets.Scripts.Project.View.Cam
 {
     public class CamManager : EventView
     {
-        public RV_Grid Grid;
+        public RV_GameInfo Info;
 
         public Vector3 offset;
 
@@ -74,7 +74,7 @@ namespace Assets.Scripts.Project.View.Cam
         /// </summary>/////////////////////////////////////////////////////////////
         private void CalculateMoveAndZoom()
         {
-            if (Grid.HexList.Count < 2)
+            if (Info.HexList.Count < 2)
             {
                 _movePoint = Vector3.zero;
 
@@ -82,11 +82,11 @@ namespace Assets.Scripts.Project.View.Cam
             }
             else
             {
-                _bounds = new Bounds(Grid.HexList[0].position, Vector3.zero);
+                _bounds = new Bounds(Info.HexList[0].position, Vector3.zero);
 
-                for (int i = 0; i < Grid.HexList.Count; i++)
+                for (int i = 0; i < Info.HexList.Count; i++)
                 {
-                    _bounds.Encapsulate(Grid.HexList[i].position);
+                    _bounds.Encapsulate(Info.HexList[i].position);
                 }
                 _movePoint = _bounds.center;
 
