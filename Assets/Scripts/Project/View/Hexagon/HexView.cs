@@ -14,11 +14,15 @@ namespace Assets.Scripts.Project.View.Hexagon
     {
         public RV_GameInfo Info;
 
+        public Transform Mesh;
+
         public int color;
 
         public int x;
 
         public int y;
+
+        public bool isStar = false;
 
         public bool isBomb = false;
 
@@ -39,7 +43,7 @@ namespace Assets.Scripts.Project.View.Hexagon
 
             color = hexC;
 
-            transform.name = "Hexagon_" + x + "_" + y;
+            transform.name = "Hexagon_" + x + "-" + y;
 
             PlaceIt();
 
@@ -50,12 +54,24 @@ namespace Assets.Scripts.Project.View.Hexagon
             BuildAnimation();
         }
 
+        public void Replace(int hexX, int hexY)
+        {
+            x = hexX;
+
+            y = hexY;
+
+            transform.name = "Hexagon_" + x + "-" + y;
+
+            PlaceIt();
+
+            Info.HexDict[x + "-" + y] = this;
+        }
         /// //////////////////////////////////////////////////////////////
         /// <summary>//////////////// PlaceIt //////////////////</summary>
         /// //////////////////////////////////////////////////////////////
         private void PlaceIt()
         {
-            transform.localPosition = new Vector3(x * Info.DistX, y * Info.Height);
+            transform.position = new Vector3(x * Info.DistX, y * Info.Height);
 
             if (x % 2 == 1) transform.Translate(0, Info.Height * .5f, 0);
 
@@ -67,6 +83,8 @@ namespace Assets.Scripts.Project.View.Hexagon
         /// //////////////////////////////////////////////////////////////
         public void FixNeighbors()
         {
+            Neighbors.Clear();
+
             Info.HexDict.CheckAndAssign(this, HexNeighbor.TopHex, x + "-" + (y + 1));
             Info.HexDict.CheckAndAssign(this, HexNeighbor.BotHex, x + "-" + (y - 1));
 
@@ -107,7 +125,7 @@ namespace Assets.Scripts.Project.View.Hexagon
             else
                 color = specificColor;
 
-            GetComponent<SpriteRenderer>().color = Info.HexColors[color];
+            Mesh.GetComponent<SpriteRenderer>().color = Info.HexColors[color];
         }
 
         private bool CheckColorMatchForBuildSetup()
@@ -162,7 +180,7 @@ namespace Assets.Scripts.Project.View.Hexagon
         public void MatchAnimation()
         {
             //particleFX
-            gameObject.SetActive(false);
+            pool.Return(gameObject);
 
         }
 

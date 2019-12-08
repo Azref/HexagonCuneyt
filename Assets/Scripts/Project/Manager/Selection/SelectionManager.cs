@@ -21,15 +21,11 @@ namespace Assets.Scripts.Project.Manager.Selection
 
         private bool _cw = true;
 
-        private HexView _tempHex;
-
         protected override void Start()
         {
             base.Start();
 
             _liner = GetComponent<LineRenderer>();
-
-            _tempHex = new GameObject().AddComponent<HexView>();
 
             SwipeManager.OnSwipeDetected += OnSwipeDetected;
         }
@@ -73,27 +69,14 @@ namespace Assets.Scripts.Project.Manager.Selection
 
             _rotCount++;
 
-            transform.DORotate(new Vector3(0, 0, (_cw ? -1 : 1) * 120), .1f).OnComplete(RotCompleted).SetDelay(_rotCount == 1 ? 0 : .1f);
+            transform.DORotate(new Vector3(0, 0, (_cw ? -1 : 1) * 120), .15f).OnComplete(RotCompleted).SetDelay(_rotCount == 1 ? 0 : .1f);
         }
 
         private void RotCompleted()
         {
             transform.localEulerAngles = Vector3.zero;
 
-            _tempHex.isBomb = Info.SelectedHexs[0].isBomb;
-            _tempHex.color = Info.SelectedHexs[0].color;
-
-            if (_cw)
-            {
-                Info.SelectedHexs[0].Copy(Info.SelectedHexs[2]);
-                Info.SelectedHexs[2].Copy(Info.SelectedHexs[1]);
-                Info.SelectedHexs[1].Copy(_tempHex);
-            } else
-            {
-                Info.SelectedHexs[0].Copy(Info.SelectedHexs[1]);
-                Info.SelectedHexs[1].Copy(Info.SelectedHexs[2]);
-                Info.SelectedHexs[2].Copy(_tempHex);
-            }
+            Info.SelectedHexs.Rotate(Info.HexDict, _cw);
 
             Status.value &= ~GameStatus.HexIsRotating;
 
@@ -114,7 +97,7 @@ namespace Assets.Scripts.Project.Manager.Selection
         /// this is the figure when we touch to the right corner of the hexagon (cornerId 1)
         /// (the touch point is shown in the figure with "X")
         /// Clockwise Neighbors: RTHex (HexNeighbor)0 - RBHex (HexNeighbor)1
-        /// 
+        /// </summary>
         ///                            5 - - - 0
         ///                           -         -
         ///                         -    RTHex    -
@@ -131,7 +114,6 @@ namespace Assets.Scripts.Project.Manager.Selection
         ///                           -         -
         ///                            3 - - - 2
         ///  
-        /// </summary>
         public void SelectHex(string val)
         {
             string[] split = val.Split('/');

@@ -104,7 +104,7 @@ namespace Assets.Scripts.Project.Manager.Game
                 Vector2 aimVector = hit.point - (Vector2)hit.transform.position;
                 float aim = Vector2.SignedAngle(aimVector, Vector2.down) + 180;
                 int cornerId = Mathf.FloorToInt(aim / 60);
-                var hex = hit.transform.GetComponent<HexView>();
+                var hex = hit.transform.GetComponentInParent<HexView>();
 
                 //Debug.Log("----------------------");
                 //Debug.Log(hit.transform.name);
@@ -206,7 +206,7 @@ namespace Assets.Scripts.Project.Manager.Game
 
             for (int i = 0; i < Info.SelectedHexs.Count; i++)
             {
-                Info.SelectedHexs[i].MatchAnimation();
+                //Info.SelectedHexs[i].MatchAnimation();
             }
 
         }

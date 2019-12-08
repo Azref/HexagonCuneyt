@@ -28,9 +28,35 @@ namespace Assets.Scripts.Project.Extension
 
         public static void Copy(this HexView hex, HexView hexCopy)
         {
+            hex.isStar = hexCopy.isStar;
+
             hex.isBomb = hexCopy.isBomb;
 
             hex.ColorIt(false, hexCopy.color);
+        }
+
+        public static void Rotate(this List<HexView> list, Dictionary<string, HexView> hexDict, bool cw)
+        {
+            int temp_0__x = list[0].x;
+            int temp_0__y = list[0].y;
+
+            if (!cw)
+            {
+                list[0].Replace(list[2].x, list[2].y);
+                list[2].Replace(list[1].x, list[1].y);
+                list[1].Replace(temp_0__x, temp_0__y);
+            }
+            else
+            {
+                list[0].Replace(list[1].x, list[1].y);
+                list[1].Replace(list[2].x, list[2].y);
+                list[2].Replace(temp_0__x, temp_0__y);
+            }
+
+            list[0].FixNeighbors();
+            list[1].FixNeighbors();
+            list[2].FixNeighbors();
+
         }
 
     }
