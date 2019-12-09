@@ -7,6 +7,8 @@
         MakeSelection,
         CheckSelectionMatch,
         NoMatcheRotateAgain,
-        ResetSelection
+        ResetSelection,
+        MatchComplete,
+        RefreshScore
     }
 }

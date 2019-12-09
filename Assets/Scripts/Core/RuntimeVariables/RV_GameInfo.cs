@@ -35,5 +35,7 @@ public class RV_GameInfo : SerializedScriptableObject
 
     public List<HexView> MatchList = new List<HexView>();
 
+    public List<HexView> BotHexes = new List<HexView>();
+
 }
 

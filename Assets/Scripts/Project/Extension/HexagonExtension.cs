@@ -26,15 +26,6 @@ namespace Assets.Scripts.Project.Extension
             Dictionary[val].Neighbors[(HexNeighbor)(((int)NeighborId + 3)% Enum.GetValues(typeof(HexNeighbor)).Length)] = hex;
         }
 
-        public static void Copy(this HexView hex, HexView hexCopy)
-        {
-            hex.isStar = hexCopy.isStar;
-
-            hex.isBomb = hexCopy.isBomb;
-
-            hex.ColorIt(false, hexCopy.color);
-        }
-
         public static void Rotate(this List<HexView> list, Dictionary<string, HexView> hexDict, bool cw)
         {
             int temp_0__x = list[0].x;

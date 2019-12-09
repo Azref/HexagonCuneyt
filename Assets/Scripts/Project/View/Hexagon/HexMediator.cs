@@ -1,15 +1,15 @@
-using System;
+using Assets.Scripts.Core.Enums;
 using Assets.Scripts.Core.Model.Game;
 using Assets.Scripts.Project.Event;
 using strange.extensions.dispatcher.eventdispatcher.api;
 using strange.extensions.mediation.impl;
-using UnityEngine;
 
 namespace Assets.Scripts.Project.View.Hexagon
 {
     public enum HexEvent
     {
-        BuildAnimationCompleted
+        BuildAnimationCompleted,
+        MatchComplete
     }
 
     public class HexMediator : EventMediator
@@ -21,6 +21,19 @@ namespace Assets.Scripts.Project.View.Hexagon
         public override void OnRegister()
         {
             view.dispatcher.AddListener(HexEvent.BuildAnimationCompleted, OnBuildAnimationCompleted);
+
+            view.dispatcher.AddListener(HexEvent.MatchComplete, OnMatchComplete);
+
+        }
+
+        private void OnMatchComplete(IEvent payload)
+        {
+
+            Game.Status.value &= ~GameStatus.MatchAnimation;
+
+            Game.Status.value &= ~GameStatus.Blocked;
+
+            dispatcher.Dispatch(GameEvent.MatchComplete);
         }
 
         public void OnBuildAnimationCompleted(IEvent payload)
@@ -31,6 +44,9 @@ namespace Assets.Scripts.Project.View.Hexagon
         public override void OnRemove()
         {
             view.dispatcher.RemoveListener(HexEvent.BuildAnimationCompleted, OnBuildAnimationCompleted);
+
+            view.dispatcher.RemoveListener(HexEvent.MatchComplete, OnMatchComplete);
+
         }
     }
 }

@@ -6,6 +6,8 @@ namespace Assets.Scripts.Core.Model.Game
 
         RV_GameInfo Info { get; }
 
+        RV_Int Score { get; set; }
+
         void Clear();
     }
 }

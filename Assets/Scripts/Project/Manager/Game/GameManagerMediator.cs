@@ -12,8 +12,8 @@ namespace Assets.Scripts.Project.Manager.Game
     {
         GridReady,
         MakeSelection,
-        ClearSelectionLines,
-        NoMatch
+        NoMatch,
+        WeGotMatch
     }
 
     public class GameManagerMediator : EventMediator
@@ -34,9 +34,13 @@ namespace Assets.Scripts.Project.Manager.Game
 
             dispatcher.AddListener(GameEvent.CheckSelectionMatch, OnCheckSelectionMatch);
 
-			view.dispatcher.AddListener(GameManagerEvent.ClearSelectionLines, OnWeGotMatchs);
+			view.dispatcher.AddListener(GameManagerEvent.WeGotMatch, OnWeGotMatch);
 
 			view.dispatcher.AddListener(GameManagerEvent.NoMatch, OnNoMatch);
+
+			view.dispatcher.AddListener(GameManagerEvent.NoMatch, OnNoMatch);
+
+            dispatcher.AddListener(GameEvent.MatchComplete, OnMatchComplete);
         }
 
         private void OnBuildGrid(IEvent payload)
@@ -62,14 +66,21 @@ namespace Assets.Scripts.Project.Manager.Game
             view.CheckSelectionMatch();
         }
 
-        private void OnWeGotMatchs(IEvent payload)
+        private void OnWeGotMatch(IEvent payload)
         {
             dispatcher.Dispatch(GameEvent.ResetSelection);
+
+            dispatcher.Dispatch(GameEvent.RefreshScore);
         }
 
         private void OnNoMatch(IEvent payload)
         {
             dispatcher.Dispatch(GameEvent.NoMatcheRotateAgain);
+        }
+
+        private void OnMatchComplete(IEvent payload)
+        {
+            view.CheckColumn();
         }
 
         public override void OnRemove()
@@ -82,9 +93,11 @@ namespace Assets.Scripts.Project.Manager.Game
 
             dispatcher.RemoveListener(GameEvent.CheckSelectionMatch, OnCheckSelectionMatch);
 
-            view.dispatcher.RemoveListener(GameManagerEvent.ClearSelectionLines, OnWeGotMatchs);
+            view.dispatcher.RemoveListener(GameManagerEvent.WeGotMatch, OnWeGotMatch);
 
             view.dispatcher.RemoveListener(GameManagerEvent.NoMatch, OnNoMatch);
+
+            dispatcher.RemoveListener(GameEvent.MatchComplete, OnMatchComplete);
         }
     }
 }

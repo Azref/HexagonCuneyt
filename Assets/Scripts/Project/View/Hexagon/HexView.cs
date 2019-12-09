@@ -27,8 +27,6 @@ namespace Assets.Scripts.Project.View.Hexagon
 
         public bool isBomb = false;
 
-        public bool isDead = false;
-
         private Vector3 _pos;
 
         [ShowInInspector]
@@ -68,6 +66,21 @@ namespace Assets.Scripts.Project.View.Hexagon
             PlaceIt();
 
             Info.HexDict[x + "-" + y] = this;
+        }
+
+        public void ReGenerate(int hexX, int hexY)
+        {
+            x = hexX;
+
+            y = hexY;
+
+            transform.name = "Hexagon_" + x + "-" + y;
+
+            PlaceIt();
+
+            Info.HexDict[x + "-" + y] = this;
+
+            FixNeighbors();
         }
         /// //////////////////////////////////////////////////////////////
         /// <summary>//////////////// PlaceIt //////////////////</summary>
@@ -173,53 +186,104 @@ namespace Assets.Scripts.Project.View.Hexagon
             gameObject.SetActive(true);
 
             if(x == Info.GridWidth-1 && y == Info.GridHeight-1)
-                transform.DOMove(_pos, 1.5f).SetEase(Ease.InCirc).SetDelay(y * .1f + x * .2f).OnComplete(()=> {
+                transform.DOMove(_pos, 1.7f).SetEase(Ease.InQuart).SetDelay(y * .1f + x * .2f).OnComplete(()=> {
                     dispatcher.Dispatch(HexEvent.BuildAnimationCompleted);
                 });
             else
-                transform.DOMove(_pos, 1.5f).SetEase(Ease.InCirc).SetDelay(y * .1f + x * .2f);
+                transform.DOMove(_pos, 1.7f).SetEase(Ease.InQuart).SetDelay(y * .1f + x * .2f);
         }
 
+        /// //////////////////////////////////////////////////////////////
+        /// <summary>///////////////// Match ///////////////////</summary>
+        /// //////////////////////////////////////////////////////////////
         public void Match(int timeDelayX)
         {
             MatchFX();
 
-            CheckForFallDown(transform.position.y);
-            //StartCoroutine(SlideDown(y));
-        }
+            CheckForFallDown(y);
 
-        public void MatchFX()
+            CreateFromThisToTop();
+        }
+        public void CreateFromThisToTop(int no = 0)
         {
-            //particleFX
-            //pool.Return(gameObject);
-            Mesh.gameObject.SetActive(false);
-            isDead = true;
+            int diff;
+            for (diff = y+1; diff < Info.GridHeight; diff++)
+            {
+                if (!Info.MatchList.Contains(Info.HexDict[x + "-" + diff]))
+                    break;
+            }
+            diff -= y;
+
+            MoveTopAsNew(this, diff);
+        }
+        private void MoveTopAsNew(HexView hex, int diff)
+        {
+            hex.transform.position = Info.HexDict[x + "-" + (Info.GridHeight - diff)].transform.position + Vector3.up * (Info.GridHeight) * Info.HexHeight;
+            hex.ColorIt(false, UnityEngine.Random.Range(1, Info.HexColors.Count));
+            hex.Mesh.gameObject.SetActive(true);
+
+            hex.transform.DOMoveY(Info.HexDict[x + "-" + (Info.GridHeight - diff)].transform.position.y, (Info.GridHeight-5) * .18f).SetDelay(.18f + (Info.GridHeight-diff) * .1f).SetEase(Ease.InQuart).
+                OnComplete(() => 
+                {
+                    hex.ReGenerate(hex.x, Info.GridHeight - diff);
+
+                    if (DOTween.TotalPlayingTweens() == 0)
+                    {
+                        ReFixNeighbors();
+                        dispatcher.Dispatch(HexEvent.MatchComplete);
+                    }
+                });
+
+            if (diff - 1 > 0)
+                MoveTopAsNew(hex.Neighbors[HexNeighbor.TopHex], diff-1);
         }
 
-        public void CheckForFallDown(float y_To_Fall, int no = 0)
+        private void ReFixNeighbors()
+        {
+            Info.MatchList.Clear();
+
+            for (int i = 0; i < Info.BotHexes.Count; i++)
+            {
+                for (int j = 0; j < Info.GridHeight; j++)
+                {
+                    Info.HexDict[Info.BotHexes[i].x + "-" + j].FixNeighbors();
+                }
+            }
+        }
+
+        public void CheckForFallDown(int y_To_Fall, int no = 0)
         {
             if (Neighbors.ContainsKey(HexNeighbor.TopHex))
             {
                 if (Info.MatchList.Contains(Neighbors[HexNeighbor.TopHex]))
                 {
+                    //This is matched hex.. 
                     Neighbors[HexNeighbor.TopHex].MatchFX();
                     Neighbors[HexNeighbor.TopHex].CheckForFallDown(y_To_Fall);
                 } else
                     Neighbors[HexNeighbor.TopHex].FallDown(y_To_Fall, no);
             }
-            else
-                Debug.Log("createNew");    
+            //else
+            //    Debug.Log("createNew");    
         }
 
-        public void FallDown (float y_To_Fall, int no)
+        public void FallDown (int y_To_Fall, int no)
         {
-            var floorDif = ((transform.position.y - y_To_Fall) / Info.HexHeight);
+            var floorDif = y - y_To_Fall;
+            transform.DOMoveY(Info.HexDict[x + "-" + y_To_Fall].transform.position.y, floorDif * .18f).SetDelay(.18f + no * .1f).SetEase(Ease.InQuart).
+                OnComplete(()=>{
+                    this.Replace(x, y_To_Fall);
+                    this.FixNeighbors();
+                });
 
-            transform.DOMoveY(y_To_Fall, floorDif * .2f).SetDelay(.1f + no * .1f).SetEase(Ease.InCirc);
-
-            CheckForFallDown((y_To_Fall + Info.HexHeight), no + 1);
+            CheckForFallDown((y_To_Fall + 1), no + 1);
         }
 
+        public void MatchFX()
+        {
+            //particleFX
+            Mesh.gameObject.SetActive(false);
+        }
         /// //////////////////////////////////////////////////////////////
         /// <summary>////////////////// Pool ///////////////////</summary>
         /// //////////////////////////////////////////////////////////////
@@ -228,14 +292,12 @@ namespace Assets.Scripts.Project.View.Hexagon
 
         public void OnGetFromPool()
         {
-            isDead = false;
 
         }
 
         public void OnReturnFromPool()
         {
             transform.localScale = Vector3.one;
-            isDead = true;
         }
 
         #endregion

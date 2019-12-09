@@ -16,11 +16,12 @@ namespace Assets.Screen.Home.Scripts.Controller
             //Retain();
 
             dispatcher.Dispatch(GameEvent.BuildGrid);
-            //dispatcher.Dispatch(ScreenEvent.OpenPanel, new PanelVo
-            //{
-            //    Name = GameScreens.Home,
-            //    Type = GameStatus.Home
-            //});
+
+            dispatcher.Dispatch(ScreenEvent.OpenPanel, new PanelVo
+            {
+                Name = GameScreens.Home,
+                Type = GameStatus.Home
+            });
 
             // Complete the command with Release function
             //Release();

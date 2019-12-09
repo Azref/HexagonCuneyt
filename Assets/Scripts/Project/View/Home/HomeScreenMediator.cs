@@ -1,49 +1,32 @@
 using System;
+using Assets.Scripts.Core.Model.Game;
+using Assets.Scripts.Project.Event;
 using strange.extensions.mediation.impl;
 
 namespace Assets.Scripts.Project.View.Home
 {
-    /// <summary>
-    /// Events releated to this screen
-    /// </summary>
-    public enum HomeScreenEvent
-    {
-        Back
-    }
-
+    
     public class HomeScreenMediator : EventMediator
     {
-        [Inject]
-        public HomeScreenView view { get; set; }
+        [Inject] public HomeScreenView view { get; set; }
 
-        /// <summary>
-        /// Works after all bindings are completed. 
-        /// Useful to attach listeners
-        /// After Awake 
-        /// Before Start. 
-        /// </summary>
+        [Inject] public IGameModel Game { get; set; }
+
         public override void OnRegister()
         {
-            // Listen back event from view
-            view.dispatcher.AddListener(HomeScreenEvent.Back, OnBack);
+            dispatcher.AddListener(GameEvent.RefreshScore, OnRefreshScore);
         }
 
-        /// <summary>
-        /// Works when back event is called
-        /// </summary>
-        public void OnBack()
+        public void OnRefreshScore()
         {
-            throw new NotImplementedException();
+            Game.Score.value += Game.Info.MatchList.Count * 5;
+
+            view.ScoreTxt.text = Game.Score.value.ToString();
         }
 
-        /// <summary>
-        /// Works when connected gameobject is destroyed. 
-        /// Useful to remove listeners
-        /// Before OnDestroy method
-        /// </summary>
         public override void OnRemove()
         {
-            view.dispatcher.RemoveListener(HomeScreenEvent.Back, OnBack);
+            dispatcher.RemoveListener(GameEvent.RefreshScore, OnRefreshScore);
         }
     }
 }

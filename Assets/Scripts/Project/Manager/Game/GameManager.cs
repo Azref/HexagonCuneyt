@@ -158,6 +158,24 @@ namespace Assets.Scripts.Project.Manager.Game
                 MatchAnimation();
         }
 
+        internal void CheckColumn()
+        {
+            for (int j = Info.GridHeight-1; j > 0; j--)
+            {
+                for (int i = Info.GridWidth-1; i > 0; i--)
+                {
+
+                    Debug.Log(i + "-" + j);
+                    if (CheckHexMatch(Info.HexDict[i + "-" + j]))
+                    {
+                        break;
+                    }
+                }
+            }
+            if (Info.MatchList.Count > 0)
+                MatchAnimation();
+        }
+
         private bool CheckHexMatch(HexView hex1, bool justForCheck = false)
         {
             //Debug.Log("Checking for " + hex1.name);
@@ -202,21 +220,21 @@ namespace Assets.Scripts.Project.Manager.Game
 
             SetParentSelectedHexes();
 
-            dispatcher.Dispatch(GameManagerEvent.ClearSelectionLines);
+            dispatcher.Dispatch(GameManagerEvent.WeGotMatch);
 
             Status.value |= GameStatus.MatchAnimation;
 
             Status.value |= GameStatus.Blocked;
 
-            List<HexView> BotHexes = Info.MatchList.FindBottomHexes();
+            Info.BotHexes = Info.MatchList.FindBottomHexes();
 
-            BotHexes.Sort((hex1, hex2) => hex1.x.CompareTo(hex2.x));
+            Info.BotHexes.Sort((hex1, hex2) => hex1.x.CompareTo(hex2.x));
 
             //Info.MatchList.Sort((hex1, hex2) => (hex1.y * 100 - hex1.x).CompareTo(hex2.y * 100 - hex2.x));
 
-            for (int i = 0; i < BotHexes.Count; i++)
+            for (int i = 0; i < Info.BotHexes.Count; i++)
             {
-                BotHexes[i].Match(i);
+                Info.BotHexes[i].Match(i);
             }
 
         }
